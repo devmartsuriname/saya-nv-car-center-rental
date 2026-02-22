@@ -1,135 +1,387 @@
-# Plan: Phase 1 Corrections
+# Phase 2 + Phase 3 — Documentation Only
 
-## Summary of Required Changes
+## Deliverables
 
-5 corrections to align the implemented Phase 1 with the updated instructions.
+Two documentation files will be created. No code changes.
 
 ---
 
-## Correction 1 — Restore VideoOne to HomeOne
+## File 1: `Saya Project Docs/Phase-2-Admin-Module-Recalibration.md`
 
-**File**: `gorent-car-rental-react-js-template/src/pages/home-one/HomeOne.tsx`
+### A) Active Modules (12)
 
-- Add `import VideoOne from '../../sections/home-one/VideoOne';`
-- Insert `<VideoOne />` after `<TestimonialOne />` (before Gallery)
 
-**Updated render order** (position 10):
+| #   | Module         | Purpose                                                      | Frontend Sections Served      | Content Type | CRUD | Media Upload   | Ordering | Risk   |
+| --- | -------------- | ------------------------------------------------------------ | ----------------------------- | ------------ | ---- | -------------- | -------- | ------ |
+| 1   | Site Settings  | Header logo, nav links, footer content, sticky header config | Header, Footer, StrickyHeader | Single       | No   | Yes (logo)     | No       | Low    |
+| 2   | Hero Slides    | Banner slider content, CTAs                                  | BannerOne                     | Repeatable   | Yes  | Yes            | Yes      | Medium |
+| 3   | Services       | Service cards (4 cards: Rental, Sales, 2 sub-services)       | ServiceOne                    | Repeatable   | Yes  | Yes (icons)    | Yes      | Low    |
+| 4   | About Content  | About text, progress bars, phone, experience, 2 images       | AboutOne                      | Single       | No   | Yes (2 images) | No       | Low    |
+| 5   | Vehicles       | Car listings with brand tabs, specs, pricing                 | ListingOne                    | Repeatable   | Yes  | Yes            | Yes      | High   |
+| 6   | Quick Request  | Form config (vehicle dropdown options, WhatsApp number)      | QuickRequest                  | Single       | No   | No             | No       | Low    |
+| 7   | Why Choose     | Reason cards (icon, title, text)                             | WhychooseOne                  | Repeatable   | Yes  | Yes (icons)    | Yes      | Low    |
+| 8   | Testimonials   | Customer reviews (name, role, image, text, rating)           | TestimonialOne                | Repeatable   | Yes  | Yes (avatar)   | Yes      | Low    |
+| 9   | Gallery        | Image gallery (homepage limited to 6)                        | GalleryHomeOne, Gallery       | Repeatable   | Yes  | Yes            | Yes      | Low    |
+| 10  | Brand Partners | Partner/brand logos                                          | BrandOne                      | Repeatable   | Yes  | Yes (logos)    | Yes      | Low    |
+| 11  | CTA Banner     | Call-to-action section text and link                         | LetsTalk                      | Single       | No   | No             | No       | Low    |
+| 12  | Blog           | Blog posts (separate page only, not on homepage)             | Blog page                     | Repeatable   | Yes  | Yes            | Yes      | Medium |
+
+
+### B) Deprecated Modules
+
+
+| Module                                | Status           | Notes                                                 |
+| ------------------------------------- | ---------------- | ----------------------------------------------------- |
+| ProcessOne (Car Rental Process)       | Deferred         | May return in future phase for dedicated rental page  |
+| CounterOne (Fun Facts)                | Deferred         | Removed from WhychooseOne; could return on About page |
+| PricingOne (+ CallOne, PopularCarOne) | Deferred         | Pricing plans not in scope for Phase 1 homepage       |
+| TeamOne (Drivers)                     | Deferred         | May return for About or dedicated team page           |
+| DownloadApp                           | Fully Deprecated | No mobile app planned                                 |
+| FaqOne (Homepage FAQ)                 | Deferred         | May return on Contact or dedicated FAQ page           |
+| BlogOne (Homepage Blog)               | Deferred         | Blog section removed from homepage; blog page intact  |
+| VideoOne                              | Active (kept)    | Remains on homepage — NOT deprecated                  |
+
+
+### C) Admin Panel Grouping Strategy (Conceptual)
 
 ```
-1.  Header
-2.  BannerOne
-3.  SlidingTextOne
-4.  ServiceOne
-5.  AboutOne
-6.  ListingOne
-7.  QuickRequest
-8.  WhychooseOne
-9.  TestimonialOne
-10. VideoOne
-11. Gallery (6 items)
-12. BrandOne
-13. LetsTalk
-14. Footer
-15. StrickyHeader
+Dashboard
+  - Overview / Stats
+
+Content
+  - Hero Slides
+  - Services
+  - About
+  - Why Choose
+  - CTA Banner
+
+Vehicles
+  - All Vehicles (Rental + Sale unified list)
+  - (Future: Rentals filter)
+  - (Future: For Sale filter)
+
+Marketing
+  - Testimonials
+  - Blog
+  - Gallery
+  - Brand Partners
+
+Inquiries
+  - Quick Requests (future: view submitted requests)
+
+Settings
+  - Site Settings (Header, Footer, Sticky Header)
+  - Quick Request Config (WhatsApp number, vehicle dropdown options)
 ```
 
 ---
 
-## Correction 2 — Revert ListingOne.tsx (Remove Rental/For Sale Tabs)
+## File 2: `Saya Project Docs/Phase-3-Vehicle-Schema-Blueprint.md`
 
-**File**: `gorent-car-rental-react-js-template/src/sections/home-one/ListingOne.tsx`
+### Step 1 — Core Vehicle Entity
 
-- Remove `categoryTabs` array (lines 18-21)
-- Remove `activeCategory` state (line 25)
-- Remove `handleCategory` function (lines 31-33)
-- Remove the category tabs UI block (lines 48-61)
-- Keep brand tabs and Swiper carousel unchanged
 
-The Rental/For Sale requirement will be documented as a future item only.
+| Field             | Type                    | Notes                                 |
+| ----------------- | ----------------------- | ------------------------------------- |
+| id                | UUID / Auto-increment   | Primary key                           |
+| title             | String                  | Display name                          |
+| slug              | String                  | URL-friendly identifier               |
+| brand             | String                  | e.g., Tesla, Honda, Audi              |
+| model             | String                  | e.g., Model 3, Civic                  |
+| year              | Integer                 | Model year                            |
+| transmission      | String                  | Manual / Automatic / CVT              |
+| fuel_type         | String                  | Gasoline / Diesel / Electric / Hybrid |
+| mileage           | String                  | e.g., "28 MPG"                        |
+| seats             | Integer                 | Passenger capacity                    |
+| doors             | Integer                 | Number of doors                       |
+| color             | String                  | Exterior color                        |
+| main_image        | String (URL)            | Primary display image                 |
+| gallery_images    | Array of Strings (URLs) | Additional images                     |
+| description_short | String                  | Card-level summary                    |
+| description_long  | Text                    | Full detail page content              |
+| status            | Enum                    | active / inactive                     |
+| vehicle_type      | Enum                    | rental / sale                         |
+| created_at        | Timestamp               | Auto-generated                        |
+| updated_at        | Timestamp               | Auto-generated                        |
+
+
+### Step 2 — Rental-Specific Fields
+
+
+| Field               | Type    | Notes                            |
+| ------------------- | ------- | -------------------------------- |
+| price_per_day       | Decimal | Daily rental rate                |
+| price_per_week      | Decimal | Weekly rental rate (optional)    |
+| minimum_age         | Integer | Minimum driver age               |
+| security_deposit    | Decimal | Required deposit amount          |
+| availability_status | Enum    | available / rented / maintenance |
+| rental_terms        | Text    | Terms and conditions             |
+
+
+### Step 3 — Sale-Specific Fields
+
+
+| Field               | Type    | Notes                 |
+| ------------------- | ------- | --------------------- |
+| sale_price          | Decimal | Listing price         |
+| negotiable          | Boolean | Price negotiable flag |
+| condition           | Enum    | new / used            |
+| financing_available | Boolean | Financing option flag |
+| warranty_info       | Text    | Warranty details      |
+
+
+### Step 4 — Relational Extensions (Future Direction)
+
+Listed for awareness only. No ERD or implementation.
+
+- **Brands table** — Normalize brand data (logo, name, slug) for filtering and brand page
+- **Vehicle Categories table** — Sedan, SUV, Microbus, Luxury, etc.
+- **Transmission enum table** — Standardized transmission types
+- **Fuel enum table** — Standardized fuel types
+- **Media table** — Centralized media storage with vehicle FK
+- **Availability Calendar table** — Date-based availability for rental vehicles
+
+### Step 5 — Risk and Complexity Analysis
+
+
+| Dimension          | Assessment  | Notes                                                                             |
+| ------------------ | ----------- | --------------------------------------------------------------------------------- |
+| Complexity Level   | Medium-High | Dual-purpose entity (rental + sale) requires careful field separation             |
+| Risk if Mixed      | High        | Rental fields on sale vehicles (and vice versa) causes data confusion and UI bugs |
+| Admin UX Risk      | Medium      | Single vehicle form must conditionally show/hide fields based on vehicle_type     |
+| Filtering Risk     | Medium      | Homepage, listing pages, and search must correctly filter by vehicle_type         |
+| SEO Considerations | Medium      | Separate URL structures for /rentals/[slug] vs /for-sale/[slug] recommended       |
+| Migration Risk     | Low         | No existing database — greenfield schema design                                   |
+
 
 ---
 
-## Correction 3 — Revert Gallery.tsx (Remove maxItems Prop)
+ADMIN STRUCTURE CORRECTIONS — MUST UPDATE PHASE 2 DOCUMENT
 
-**File**: `gorent-car-rental-react-js-template/src/sections/common/Gallery.tsx`
+The current Admin Panel Grouping Strategy must be restructured for clarity, scalability, and Darkone 1:1 compliance.
 
-- Remove `GalleryProps` interface
-- Remove `maxItems` parameter
-- Restore to original: `const Gallery: React.FC = () => {` using `galleryData` directly
+This is documentation-only. No UI implementation yet.
 
-**File**: `gorent-car-rental-react-js-template/src/pages/home-one/HomeOne.tsx`
+========================================
 
-- Change `<Gallery maxItems={6} />` to `<Gallery />`
-- Instead, create a thin wrapper or slice data in HomeOne
+1) FRONTEND CONTENT GROUPING
 
-**Approach**: Since Gallery is a shared component, the homepage limitation will be handled by creating a small HomeOne-specific wrapper component (`HomeGallery.tsx`) that imports `galleryData`, slices to 6 items, and renders the gallery markup. Alternatively, since modifying Gallery's internal API is off-limits, and creating a wrapper that duplicates Gallery markup is wasteful, the simplest approach is: just render `<Gallery />` as-is on HomeOne. The 6-item limit is a future concern when data becomes dynamic.
+========================================
 
-**Decision**: Render `<Gallery />` without modification. Document the 6-item homepage limit as a future requirement.
+The following modules must be grouped under a main menu:
 
----
+Frontend
 
-## Correction 4 — Booking.tsx Confirmation (Already Correct)
+   - Hero Slides
 
-QuickRequest.tsx was already created as a HomeOne-specific component. Shared `Booking.tsx` is untouched. No action needed.
+   - Services
 
----
+   - About Content
 
-## Correction 5 — Update Documentation
+   - Why Choose
 
-**File**: `Saya Project Docs/Phase-1-Homepage-Structure-Freeze.md`
+   - Testimonials
 
-Update to reflect:
+   - Gallery
 
-- VideoOne restored (section 10 in order)
-- ListingOne tabs removed (documented as future requirement)
-- Gallery rendered without `maxItems` prop (future requirement documented)
-- 15-section final order (not 14)
+   - Brand Partners
 
-**File**: `Saya Project Docs/Phase-1-Repo-Cleanup-Log.md`
+   - CTA Banner
 
-- Add correction log entry noting the 4 corrections applied
+Reason:
 
----
+These modules serve shared frontend sections across multiple pages.
 
-## Files Modified (4)
+They are content-driven and non-transactional.
 
+========================================
 
-| File                                   | Change                                                                          |
-| -------------------------------------- | ------------------------------------------------------------------------------- |
-| `HomeOne.tsx`                          | Add VideoOne import + render; remove `maxItems={6}` from Gallery                |
-| `ListingOne.tsx`                       | Remove categoryTabs, activeCategory state, handleCategory, and tab UI block     |
-| `Gallery.tsx`                          | Remove `GalleryProps` interface and `maxItems` prop; restore original signature |
-| `Phase-1-Homepage-Structure-Freeze.md` | Update section order, removed list, and notes                                   |
+2) BLOG MUST BE A TOP-LEVEL MODULE
 
+========================================
 
-APPROVAL BLOCKER — CORRECTION 3 MUST BE UPDATED
+Blog should NOT be under Marketing.
 
-Gallery limitation is NOT a future requirement. HomeOne must display max 6 gallery items to keep the homepage short/mobile-friendly.
+Blog must be its own top-level admin module.
 
-Do NOT modify Gallery.tsx API (no maxItems prop).
+Reason:
+
+Blog will scale independently (SEO, categories, posts, media).
+
+Avoid overcrowding sidebar.
+
+========================================
+
+3) QUICK REQUEST UNDER CRM
+
+========================================
+
+Quick Request must move under:
+
+CRM
+
+   - Quick Requests (submitted leads)
+
+   - Quick Request Config (WhatsApp number, dropdown options)
+
+Reason:
+
+This is lead capture, not content.
+
+CRM separation prevents confusion.
+
+========================================
+
+4) VEHICLES MUST BE SPLIT
+
+========================================
+
+Vehicles must NOT be unified under one list.
 
 Instead:
 
-- Create a HomeOne-only wrapper component (e.g., src/sections/home-one/GalleryHomeOne.tsx)
+Vehicles
 
-- Use galleryData.slice(0, 6) inside that wrapper
+   - Rental Listings
 
-- Render the gallery UI with the sliced data
+   - Sales Listings
 
-- HomeOne should render <GalleryHomeOne /> (not <Gallery />)
+Reason:
 
-Update [Phase-1-Homepage-Structure-Freeze.md](http://Phase-1-Homepage-Structure-Freeze.md) accordingly and keep section counting consistent (either “15 including StrickyHeader” or “14 + StrickyHeader”).
+Rental and Sale have different operational logic.
 
-After this change, I can approve.  
-Files Unchanged
+Saya team must manage them separately to avoid UX confusion.
 
-- `QuickRequest.tsx` — already correct
-- `WhychooseOne.tsx` — already correct (counters removed)
-- `Booking.tsx` — confirmed untouched
+Internally they may share schema,
 
-## No Changes To
+but admin UI must present them as distinct modules.
 
-- Routing
-- Dependencies
-- SCSS/CSS
-- Backend logic
+========================================
+
+5) SITE SETTINGS AS TOP-LEVEL MODULE
+
+========================================
+
+Site Settings must be its own main menu item.
+
+Not under Settings.
+
+Reason:
+
+High-frequency access module.
+
+Contains:
+
+- Logo
+
+- Header
+
+- Footer
+
+- Sticky Header
+
+- Global Config
+
+========================================
+
+6) DARKONE 1:1 GOVERNANCE REQUIREMENT
+
+========================================
+
+All future admin UI design must strictly reuse Darkone components.
+
+Reference:
+
+DARKONE_ASSET_[MAP.md](http://MAP.md)
+
+Follow:
+
+- No custom UI
+
+- No new layout systems
+
+- Use Darkone page structure
+
+- Use Darkone card patterns
+
+- Use Darkone tables
+
+- Use Darkone form layouts
+
+Before designing any admin page:
+
+Review DARKONE_ASSET_[MAP.md](http://MAP.md)
+
+Reuse existing component patterns.
+
+========================================
+
+7) PAGE vs XL MODAL DECISION RULE
+
+========================================
+
+For each module, document whether:
+
+- It requires a full page (complex form, many fields)
+
+OR
+
+- It should use Darkone XL Modal (quick create/edit flows)
+
+Guidelines:
+
+Use Full Page for:
+
+- Vehicles (Rental/Sale)
+
+- Blog
+
+- About Content (if large content)
+
+- Services (if rich content)
+
+Use XL Modal for:
+
+- Testimonials
+
+- Gallery
+
+- Brand Partners
+
+- Hero Slides
+
+- Why Choose
+
+- CTA Banner
+
+Document reasoning in [Phase-2-Admin-Module-Recalibration.md](http://Phase-2-Admin-Module-Recalibration.md)
+
+========================================
+
+8) UPDATE REQUIRED
+
+========================================
+
+Update:
+
+Saya Project Docs/[Phase-2-Admin-Module-Recalibration.md](http://Phase-2-Admin-Module-Recalibration.md)
+
+Replace Admin Panel Grouping Strategy with the corrected structure above.
+
+Do not implement UI.
+
+Do not modify code.
+
+Documentation only.
+
+Stop after update.
+
+Await further instructions.  
+  
+Technical Notes
+
+- No files modified
+- No dependencies added
+- No database, schema, or backend work
+- Both documents saved to `Saya Project Docs/`
+- Stop after documentation
