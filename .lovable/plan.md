@@ -1,38 +1,37 @@
 
 
-# Phase 4 — Master PRD Documentation
+# Phase 5 — ERD and Database Modeling Documentation
 
 ## Objective
 
-Save the complete Master PRD v1.0 as a governance document in `Saya Project Docs/`. This is documentation only — no code, database, or schema changes.
+Save the complete Phase 5 ERD and Database Modeling document (Option B: Professional Normalization) as `Saya Project Docs/Phase-5-ERD-Database-Model.md`. Documentation only — no code, database, or schema changes.
 
 ## Deliverable
 
-**File**: `Saya Project Docs/Phase-4-Master-PRD.md`
+**File**: `Saya Project Docs/Phase-5-ERD-Database-Model.md`
 
-Contains the full Master PRD as provided, covering all 14 sections:
+Contains the full ERD specification as provided, covering all 10 sections:
 
-1. Project Overview
-2. System Architecture Scope (6 domains)
-3. User Roles and Permissions (Super Admin, Content Manager, Sales Manager, Rental Manager)
-4. Vehicle Domain (types, status lifecycle, core fields, rental/sale fields, business logic rules)
-5. CRM Domain (Quick Request fields, lead status lifecycle, rules)
-6. Blog Domain (fields, rules)
-7. Frontend Content Modules (8 managed sections, content rules)
-8. Site Settings Domain (global settings, access rules)
-9. SEO and URL Structure (vehicle URLs, blog URLs, slug rules)
-10. Admin UX Flow Requirements (vehicle creation, quick request handling, blog flows)
-11. Validation Rules
-12. Performance and Scalability
-13. Out of Scope (Phase 1)
-14. Next Phase Outputs (Phases 5-8)
+1. ERD Overview (Entities across 5 core domains)
+2. Key Design Decisions (vehicle type separation, media strategy, slugs, ordering)
+3. Data Types and Enums (6 logical enums: vehicle_type, record_status, rental_availability_status, lead_status, blog_status, vehicle_condition)
+4. Tables — Detailed (21 tables total):
+   - Media: media_assets
+   - Vehicles: vehicles, vehicle_rental_details, vehicle_sale_details, vehicle_media
+   - CRM: quick_requests
+   - Blog: blog_categories, blog_tags, blog_posts, blog_post_tags, blog_post_media
+   - Frontend Content: site_settings, hero_slides, services, about_content, about_progress_items, why_choose_items, testimonials, gallery_items, brand_partners, cta_banners
+5. Relationships (text ERD format covering all FK and join table connections)
+6. Indexing and Query Strategy (MVP-level index targets)
+7. Data Validation Rules (DB-level enforcement targets)
+8. Migration and Implementation Notes (deferred to Phase 6+)
 
 ## Technical Details
 
 - 1 file created
 - No code modifications
 - No dependencies added
-- No database or backend work
+- No database, schema, or backend work
 - Document saved to `Saya Project Docs/`
 - Stop after documentation, await further instructions
 
