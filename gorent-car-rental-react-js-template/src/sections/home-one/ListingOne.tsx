@@ -15,12 +15,23 @@ const tabButtons = [
     { id: "acura", title: "Acura" },
 ];
 
+const categoryTabs = [
+    { id: "rental", title: "Rental" },
+    { id: "for-sale", title: "For Sale" },
+];
+
 const ListingOne: React.FC = () => {
     const [isActiveTab, setIsActiveTab] = useState<string>("tesla");
+    const [activeCategory, setActiveCategory] = useState<string>("rental");
 
     const handleTab = (tabId: string) => {
         setIsActiveTab((prev) => prev !== tabId ? tabId : prev);
     }
+
+    const handleCategory = (catId: string) => {
+        setActiveCategory(catId);
+    }
+
     return (
         <section className="listing-one" id='cars'>
             <div className="">
@@ -33,6 +44,23 @@ const ListingOne: React.FC = () => {
                     </div>
                     <h2 className="section-title__title title-animation"><TextAnimation text='Explore Most Popular Cars' /></h2>
                 </div>
+
+                {/* Category Tabs: Rental | For Sale */}
+                <div className="listing-one__tab-box" style={{ marginBottom: '20px' }}>
+                    <ul className="listing-one-tab-buttons listing-one-tab-btns clearfix list-unstyled" style={{ justifyContent: 'center' }}>
+                        {categoryTabs.map((cat) => (
+                            <li
+                                key={cat.id}
+                                className={`p-tab-btn ${cat.id === activeCategory ? "active-btn" : ""}`}
+                                onClick={() => handleCategory(cat.id)}
+                            >
+                                <span>{cat.title}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                {/* Brand Tabs */}
                 <div className="listing-one__tab-box listing-one-tabs-box">
                     <ul className="listing-one-tab-buttons listing-one-tab-btns clearfix list-unstyled">
                         {
@@ -42,7 +70,6 @@ const ListingOne: React.FC = () => {
                         }
                     </ul>
                     <div className="p-tabs-content">
-                        {/*--tab*/}
                         <div className="p-tab active-tab" id="tesla">
                             <div className="listing-one__inner">
                                 <div className="listing-one__carousel owl-carousel owl-theme owl-loaded owl-drag">
@@ -66,7 +93,6 @@ const ListingOne: React.FC = () => {
                                             1624: { slidesPerView: 5, spaceBetween: 0 },
                                         }}
                                     >
-
                                         {
                                             listingData.map((item, i) => <SwiperSlide key={item?.id || i}> <div className="item">
                                                 <div className="listing-one__single MX100">
