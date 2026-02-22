@@ -4,7 +4,8 @@ import { galleryData } from "../../all-content/gallery/gallaryData";
 import { Autoplay } from "swiper/modules";
 import { Link } from "react-router";
 
-const Gallery: React.FC = () => {
+const GalleryHomeOne: React.FC = () => {
+    const items = galleryData.slice(0, 6);
 
     return (
         <section className="gallery-one">
@@ -36,7 +37,7 @@ const Gallery: React.FC = () => {
                             slidesPerView: 7,
                         },
                     }}>
-                    {galleryData.map((item) => (
+                    {items.map((item) => (
                         <SwiperSlide key={item.id}>
                             <div className="item" key={item.id}>
                                 <div className="gallery-one__single">
@@ -56,4 +57,4 @@ const Gallery: React.FC = () => {
     );
 };
 
-export default Gallery;
+export default GalleryHomeOne;

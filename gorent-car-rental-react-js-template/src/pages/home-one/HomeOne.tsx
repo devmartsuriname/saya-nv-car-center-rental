@@ -8,8 +8,9 @@ import WhychooseOne from '../../sections/home-one/WhychooseOne';
 import ListingOne from '../../sections/home-one/ListingOne';
 import QuickRequest from '../../sections/home-one/QuickRequest';
 import TestimonialOne from '../../sections/home-one/TestimonialOne';
+import VideoOne from '../../sections/home-one/VideoOne';
 import BrandOne from '../../sections/home-one/BrandOne'; 
-import Gallery from '../../sections/common/Gallery';
+import GalleryHomeOne from '../../sections/home-one/GalleryHomeOne';
 import Footer from '../../sections/common/Footer';
 import StrickyHeader from '../../sections/common/StrickyHeader';
 import LetsTalk from '../../sections/common/LetsTalk';
@@ -26,7 +27,8 @@ const HomeOne: React.FC = () => {
             <QuickRequest />
             <WhychooseOne />
             <TestimonialOne />
-            <Gallery maxItems={6} />
+            <VideoOne />
+            <GalleryHomeOne />
             <BrandOne />
             <LetsTalk />
             <Footer />

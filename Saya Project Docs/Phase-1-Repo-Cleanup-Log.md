@@ -50,3 +50,13 @@ tsconfig.node.json
 vite.config.ts
 vitest.config.ts
 ```
+
+## Corrections Applied (Phase 1 Corrections)
+
+| # | Correction | Action |
+|---|---|---|
+| 1 | Restore VideoOne to HomeOne | Added VideoOne import + render (position 10) |
+| 2 | Revert ListingOne tabs | Removed Rental/For Sale category tabs — documented as future requirement |
+| 3 | Revert Gallery.tsx + create GalleryHomeOne | Restored Gallery.tsx to original; created GalleryHomeOne.tsx with `galleryData.slice(0, 6)` |
+| 4 | Booking.tsx confirmation | Already correct — QuickRequest.tsx is HomeOne-specific |
+| 5 | Documentation updated | Phase-1-Homepage-Structure-Freeze.md and this log updated |
