@@ -1,351 +1,395 @@
-# Create DEVMART-GUARDIAN-RULES.md — Governance Document
+# Phase 0 — Repo Stabilization Plan
 
 ## Objective
 
-Create `Saya Project Docs/DEVMART-GUARDIAN-RULES.md` as the supreme governance authority for this repository. Documentation only — no code changes.
+Restructure `src/` from the current flat Darkone layout into the target structure: `src/apps/admin/`, `src/apps/public/` (placeholder), and `src/shared/`. Update all import paths, add `/admin` route prefixes, add `.admin-scope` wrapper class, and create public placeholder structure.
+
+**Restore Point**: RP-Phase0-Step1-RepoStabilization
+
+## Pre-Task Compliance Checklist
+
+- Guardian Rules referenced (DEVMART-GUARDIAN-RULES.md)
+- Execution order validated (Phase 0 is step 1)
+- Restore Point will be created before changes
+- No duplicate code will be introduced
+- No custom UI libraries added
+- Darkone 1:1 confirmed (no structural deviation)
+- Out-of-scope items untouched
+- Build currently has pre-existing apexcharts type error only
+
+## Scope
+
+- Move files only (no content changes to components)
+- Update import paths to match new locations
+- Add `/admin` prefix to all admin routes
+- Add `.admin-scope` wrapper to AdminLayout
+- Create empty placeholder folders for `src/apps/public/`
+- Create `src/shared/` with truly shared utilities
+- NO styling changes, NO new components, NO design decisions
+
+## File Movement Map
+
+### To `src/apps/admin/` (Darkone admin content)
 
-## Deliverable
+
+| Current Location                            | New Location                                           |
+| ------------------------------------------- | ------------------------------------------------------ |
+| `src/app/(admin)/`                          | `src/apps/admin/app/`                                  |
+| `src/app/(other)/`                          | `src/apps/admin/app/(other)/`                          |
+| `src/components/layout/`                    | `src/apps/admin/components/layout/`                    |
+| `src/components/wrapper/`                   | `src/apps/admin/components/wrapper/`                   |
+| `src/components/VectorMap/`                 | `src/apps/admin/components/VectorMap/`                 |
+| `src/components/from/`                      | `src/apps/admin/components/from/`                      |
+| `src/components/AnimationStar.tsx`          | `src/apps/admin/components/AnimationStar.tsx`          |
+| `src/components/ComingSoon.tsx`             | `src/apps/admin/components/ComingSoon.tsx`             |
+| `src/components/ComponentContainerCard.tsx` | `src/apps/admin/components/ComponentContainerCard.tsx` |
+| `src/components/CustomFlatpickr.tsx`        | `src/apps/admin/components/CustomFlatpickr.tsx`        |
+| `src/components/ErrorBoundary.tsx`          | `src/apps/admin/components/ErrorBoundary.tsx`          |
+| `src/components/FallbackLoading.tsx`        | `src/apps/admin/components/FallbackLoading.tsx`        |
+| `src/components/LoadingFallback.tsx`        | `src/apps/admin/components/LoadingFallback.tsx`        |
+| `src/components/NavLink.tsx`                | `src/apps/admin/components/NavLink.tsx`                |
+| `src/components/PageTitle.tsx`              | `src/apps/admin/components/PageTitle.tsx`              |
+| `src/components/Preloader.tsx`              | `src/apps/admin/components/Preloader.tsx`              |
+| `src/components/Spinner.tsx`                | `src/apps/admin/components/Spinner.tsx`                |
+| `src/components/ThemeCustomizer.tsx`        | `src/apps/admin/components/ThemeCustomizer.tsx`        |
+| `src/context/`                              | `src/apps/admin/context/`                              |
+| `src/helpers/`                              | `src/apps/admin/helpers/`                              |
+| `src/layouts/`                              | `src/apps/admin/layouts/`                              |
+| `src/routes/`                               | `src/apps/admin/routes/`                               |
+| `src/assets/scss/`                          | `src/apps/admin/assets/scss/`                          |
+| `src/assets/images/`                        | `src/apps/admin/assets/images/`                        |
+| `src/assets/data/`                          | `src/apps/admin/assets/data/`                          |
+
+
+### To `src/shared/` (truly shared, no theme styling)
+
+
+| Current Location               | New Location                          |
+| ------------------------------ | ------------------------------------- |
+| `src/components/ui/`           | `src/shared/components/ui/`           |
+| `src/lib/utils.ts`             | `src/shared/lib/utils.ts`             |
+| `src/types/`                   | `src/shared/types/`                   |
+| `src/utils/`                   | `src/shared/utils/`                   |
+| `src/hooks/use-mobile.tsx`     | `src/shared/hooks/use-mobile.tsx`     |
+| `src/hooks/use-toast.ts`       | `src/shared/hooks/use-toast.ts`       |
+| `src/hooks/useLocalStorage.ts` | `src/shared/hooks/useLocalStorage.ts` |
+| `src/hooks/useToggle.ts`       | `src/shared/hooks/useToggle.ts`       |
+| `src/hooks/useViewPort.ts`     | `src/shared/hooks/useViewPort.ts`     |
+
+
+### Admin-specific hooks (to `src/apps/admin/hooks/`)
+
+
+| Current Location               | New Location                              |
+| ------------------------------ | ----------------------------------------- |
+| `src/hooks/useFileUploader.ts` | `src/apps/admin/hooks/useFileUploader.ts` |
+| `src/hooks/useModal.ts`        | `src/apps/admin/hooks/useModal.ts`        |
+| `src/hooks/useQueryParams.ts`  | `src/apps/admin/hooks/useQueryParams.ts`  |
+
+
+### Stays at root `src/`
+
+
+| File                           | Reason                                             |
+| ------------------------------ | -------------------------------------------------- |
+| `src/main.tsx`                 | Single Vite entry point                            |
+| `src/App.tsx`                  | Top-level router mount                             |
+| `src/vite-env.d.ts`            | Vite type declarations                             |
+| `src/index.css`                | Will become minimal global reset only              |
+| `src/App.css`                  | Will be evaluated - may be removed if empty/unused |
+| `src/tailwind.config.lov.json` | Lovable config                                     |
+
+
+### Removed
+
+
+| File                     | Reason                                    |
+| ------------------------ | ----------------------------------------- |
+| `src/pages/Index.tsx`    | Lovable placeholder, not Darkone template |
+| `src/pages/NotFound.tsx` | Replaced by admin 404 at new path         |
 
-**File**: `Saya Project Docs/DEVMART-GUARDIAN-RULES.md`
 
-Contains the following sections:
+### Public placeholder (empty structure for Phase 10)
 
-1. **Title**: DEVMART GUARDIAN RULES — NON-NEGOTIABLE EXECUTION PROTOCOL
-2. **All 12 Guardian Rules** — copied exactly as provided:
-  - Template Parity 1:1 Lock
-  - No Custom Design Elements
-  - Darkone Asset Map Mandatory
-  - Reporting Mandatory
-  - No Self-Directed Design Decisions
-  - Duplication Check Before Implementation
-  - Restore Point Protocol
-  - Execution Order Lock
-  - Single Build + Strict Isolation
-  - External Supabase Only
-  - Build Safety Rule
-  - No Scope Creep
-  - Final Rule (STOP/ASK/WAIT)
-3. **Governance Enforcement Mechanism** — pre-task gates (Guardian Rules reference, Restore Point, compliance confirmation), deviation = violation definitions
-4. **Violation Protocol** — STOP, report, revert to Restore Point, await instructions
-5. **Mandatory Pre-Task Compliance Checklist** — 8-item checklist (Restore Point, duplication check, no custom UI, Darkone 1:1, Gorent 1:1, execution order, out-of-scope, build safety)
-6. **Governance Enforcement Patch** — execution order hard lock, restore point requirement, conflict resolution (Guardian Rules override)
+```text
+src/apps/public/
+  components/
+  layouts/
+  pages/
+  sections/
+    home-one/
+    common/
+  assets/
+    css/
+  data/
+```
+
+Each folder gets a `.gitkeep` file to preserve the structure.
+
+## Import Path Updates
+
+The `@/` alias remains pointing to `src/`. All 86+ files with `@/` imports will be updated:
+
+- `@/components/` becomes `@/apps/admin/components/`
+- `@/context/` becomes `@/apps/admin/context/`
+- `@/helpers/` becomes `@/apps/admin/helpers/`
+- `@/hooks/useFileUploader` becomes `@/apps/admin/hooks/useFileUploader`
+- `@/hooks/useModal` becomes `@/apps/admin/hooks/useModal`
+- `@/hooks/useQueryParams` becomes `@/apps/admin/hooks/useQueryParams`
+- `@/hooks/useLocalStorage` becomes `@/shared/hooks/useLocalStorage`
+- `@/hooks/useViewPort` becomes `@/shared/hooks/useViewPort`
+- `@/hooks/useToggle` becomes `@/shared/hooks/useToggle`
+- `@/hooks/use-mobile` becomes `@/shared/hooks/use-mobile`
+- `@/hooks/use-toast` becomes `@/shared/hooks/use-toast`
+- `@/layouts/` becomes `@/apps/admin/layouts/`
+- `@/routes/` becomes `@/apps/admin/routes/`
+- `@/assets/` becomes `@/apps/admin/assets/`
+- `@/types/` becomes `@/shared/types/`
+- `@/utils/` becomes `@/shared/utils/`
+- `@/lib/` becomes `@/shared/lib/`
+- `@/app/(admin)/` becomes `@/apps/admin/app/`
+- `@/app/(other)/` becomes `@/apps/admin/app/(other)/`
 
-DEVMART GUARDIAN RULES v2.0
+## Route Prefix Changes
 
-NON-NEGOTIABLE EXECUTION PROTOCOL
+All admin routes in `src/apps/admin/routes/index.tsx` get `/admin` prefix:
 
-(Supreme Governance Authority)
 
-0. SUPREME AUTHORITY CLAUSE
+| Current Route                 | New Route                                |
+| ----------------------------- | ---------------------------------------- |
+| `/` (redirect to /dashboards) | `/admin` (redirect to /admin/dashboards) |
+| `/dashboards`                 | `/admin/dashboards`                      |
+| `/base-ui/*`                  | `/admin/base-ui/*`                       |
+| `/forms/*`                    | `/admin/forms/*`                         |
+| `/tables/*`                   | `/admin/tables/*`                        |
+| `/icons/*`                    | `/admin/icons/*`                         |
+| `/maps/*`                     | `/admin/maps/*`                          |
+| `/apex-chart`                 | `/admin/apex-chart`                      |
+| `/pages-404-alt`              | `/admin/pages-404-alt`                   |
+| `/dark-sidenav`               | `/admin/dark-sidenav`                    |
+| `/dark-topnav`                | `/admin/dark-topnav`                     |
+| `/small-sidenav`              | `/admin/small-sidenav`                   |
+| `/hidden-sidenav`             | `/admin/hidden-sidenav`                  |
+| `/dark-mode`                  | `/admin/dark-mode`                       |
 
-This document is the highest governance authority for this repository.
 
-If any conflict exists between this document and:
+Auth routes remain unprefixed: `/auth/sign-in`, `/auth/sign-up`, etc.
 
-- Phase documents
+## Admin Layout Scoping
 
-- [Tasks.md](http://Tasks.md)
+`AdminLayout.tsx` wrapper `<div>` gets `.admin-scope` class:
 
-- Implementation Blueprints
+```tsx
+// Before
+<div className="wrapper">
 
-- Any other file
+// After
+<div className="admin-scope wrapper">
+```
 
-This document overrides. No exception.
+## SCSS Import Update
 
----------------------------------------------------------------------
+`src/main.tsx` import path changes:
 
-1. TEMPLATE PARITY — 1:1 LOCK (HARD RULE)
+```tsx
+// Before
+import './assets/scss/style.scss'
 
-- Darkone Admin must remain 1:1.
+// After
+import './apps/admin/assets/scss/style.scss'
+```
 
-- Gorent Frontend must remain 1:1.
+Note: This SCSS currently loads globally. Full scoping under `.admin-scope` is a separate styling isolation task that will be addressed after structural move is verified. For Phase 0, the import path is corrected but the SCSS content is NOT modified (1:1 parity rule).
 
-- No structural deviation.
+## Updated `src/App.tsx`
 
-- No UI improvisation.
+The top-level App component will mount the admin router. A placeholder route for `/` (public) will render a simple "Coming Soon" static page until Phase 10 import.
 
-- No layout refactoring.
+## Updated `src/routes/router.tsx` (now at `src/apps/admin/routes/router.tsx`)
 
-- No component redesign.
+Admin routes wrapped under `/admin/*` path segment.
 
-Any deviation = Governance Violation.
+## Execution Steps (in order)
 
----------------------------------------------------------------------
+1. Create Restore Point documentation: `RP-Phase0-Step1-RepoStabilization`
+2. Create `src/apps/admin/` folder structure
+3. Create `src/apps/public/` placeholder folders with `.gitkeep`
+4. Create `src/shared/` folder structure
+5. Move all admin files to `src/apps/admin/`
+6. Move shared files to `src/shared/`
+7. Update all import paths across 86+ files
+8. Add `/admin` prefix to all admin routes
+9. Add `.admin-scope` class to AdminLayout wrapper
+10. Update `src/main.tsx` SCSS import path
+11. Update `src/App.tsx` to mount admin router at `/admin/*`
+12. Remove `src/pages/Index.tsx` and `src/pages/NotFound.tsx` (Lovable placeholders)
+13. Verify build compiles
+14. Verify routing works (`/admin/dashboards`, `/auth/sign-in`)
+15. Confirm no console errors beyond pre-existing apexcharts issue
 
-2. ABSOLUTE DESIGN PROHIBITION
+## Risk Notes
 
-Strictly forbidden:
+- **86+ files** need import path updates — high risk of missed imports causing build failure
+- SCSS global loading remains temporarily until styling isolation phase
+- Menu sidebar links in `src/assets/data/menu-items.ts` likely contain route paths that need `/admin` prefix
+- Internal `<Link>` components and `useNavigate()` calls may reference old paths
 
-- Custom icons
+## Out of Scope
 
-- Bootstrap additions
+- SCSS content modification (1:1 parity)
+- Gorent template import (Phase 10)
+- Database, RLS, Supabase (locked until parity gate)
+- Shop, storefront, customer login
 
-- New UI libraries
+## Note this:  
+NOTE — Phase 0 (Repo Stabilization) Plan Review + Required Adjustments
 
-- Design “improvements”
+Status:
 
-- Personal UX decisions
+- Phase 0 plan is broadly aligned with our target architecture:
 
-- Layout “optimizations”
+  - Single Vite app
 
-Lovable is an executor — not a designer.
+  - Public site at "/" (placeholder for now)
 
----------------------------------------------------------------------
+  - Admin under "/admin" as route segment
 
-3. DARKONE ASSET MAP MANDATORY
+  - Documentation-first + Restore Point + strict governance
 
-For Admin:
+  - No database / Supabase / RLS implementation until AFTER Public 1:1 import (Phase 10)
 
-- DARKONE_ASSET_MAP must be referenced before module creation.
+Required Notes / Corrections to apply to the Phase 0 execution plan BEFORE implementation:
 
-- No new structure outside mapped structure.
+1) Do NOT start “Admin feature work”
 
-- No renamed assets.
+   - Phase 0 is FILE MOVES + IMPORT PATH UPDATES + ROUTE PREFIXING only.
 
-- No class restructuring.
+   - No UI redesign, no new components, no module changes, no schema work, no Supabase, no CRUD implementation.
 
----------------------------------------------------------------------
+2) Route Prefix Coverage MUST include ALL hardcoded paths
 
-4. EXECUTION ORDER LOCK (HARD GATE)
+   - In addition to routes/index.tsx, you MUST scan and update:
 
-Mandatory sequence:
+     - src/assets/data/menu-items.ts (and any similar menu config)
 
-1) Phase 0 — Repo Stabilization
+     - any <Link to="...">, navigate("..."), redirects, sidebar links, breadcrumb links
 
-2) Phase 10 — Frontend 1:1 Static Parity
+   - Goal: zero remaining admin paths that still point to old "/" routes.
 
-3) Parity Verification Gate — Formal Approval Required
+3) Admin Auth path MUST be decided to avoid future collision with public
 
-4) Database Waves
+   - Current plan keeps auth routes unprefixed: /auth/sign-in, /auth/sign-up, etc.
 
-5) Admin Wiring
+   - Governance recommendation (safer): move admin auth under /admin/auth/*
 
-6) Public Dynamic Integration
+     - Reason: public lives at "/" and will expand; /auth/* can collide later.
 
-Until parity is approved:
+   - If we keep /auth/* unprefixed, document this as an explicit locked decision + rationale.
 
-NO SQL
+4) CSS/SCSS Isolation Gate (critical for “no leakage” requirement)
 
-NO migrations
+   - Phase 0 may update SCSS import paths, BUT:
 
-NO RLS
+     - Do NOT import any Gorent/public CSS globally until isolation is enforced.
 
-NO storage buckets
+     - Treat global SCSS import in main.tsx as TEMPORARY and flagged as “Isolation Debt”.
 
-NO Supabase integration
+   - When Phase 10 begins, public CSS must be loaded in a way that prevents cross-app leakage.
 
-NO dynamic queries
+   - Document the isolation plan explicitly (single build + strict separation).
 
----------------------------------------------------------------------
+5) Public placeholder must remain minimal and non-invasive
 
-5. RESTORE POINT PROTOCOL (MANDATORY)
+   - Only a simple placeholder page at "/" until Phase 10 import.
 
-Before ANY of the following:
+   - No attempt to “mock” public design in Phase 0.
 
-- Folder restructuring
+6) Restore Point is mandatory
 
-- Dependency installation
+   - Create the Restore Point BEFORE any file moves.
 
-- Routing modification
+   - If build breaks beyond the pre-existing apexcharts type issue, STOP immediately and report.
 
-- Styling changes
+7) No deletions beyond explicitly listed placeholders
 
-- Schema work
+   - Only remove the Lovable placeholders listed (Index.tsx, NotFound.tsx) if confirmed unused.
 
-- RLS work
+   - No other cleanup, refactors, or “while I’m here” improvements.
 
-- Refactoring
+Execution Order Lock:
 
-A Restore Point must be created.
+- Phase 0 Repo Stabilization (this plan) must complete and be verified stable.
 
-Naming Convention:
+- NEXT: Phase 10 Frontend Parity Import (Gorent 1:1 into public app structure).
 
-RP-PhaseX-StepY-Timestamp
+- Database implementation (Phase 8 execution / SQL) remains LOCKED until after Phase 10 is completed and verified.
 
-Each Restore Point must be:
+NOTE — Darkone Demo Route Cleanup (Phase 0 Scope Control)
 
-- Confirmed in task report
+Context:
 
-- Logged in appropriate phase log
+The current Darkone template contains multiple demo routes (e.g. /base-ui/*, component showcases, charts, widgets, sample pages).
 
-- Referenced before implementation begins
+Governance Decision:
 
-No Restore Point → No Execution.
+All demo-only routes must be removed from the production route configuration during Phase 0.
 
----------------------------------------------------------------------
+Scope Clarification:
 
-6. DUPLICATION CONTROL RULE
+- Only routes required for:
 
-Before implementing any feature:
+  - Admin Dashboard
 
-- Search for existing code
+  - Future project modules (Vehicles, Frontend Modules, CRM, Blog, Site Settings)
 
-- Confirm no duplicate logic
+  - Authentication (sign-in, sign-up, reset password)
 
-- Confirm no redundant imports
+- All demo showcase routes are OUT OF SCOPE.
 
-- Confirm no duplicate routes
+Explicit Instruction:
 
-Duplicate code is forbidden.
+- Remove all demo component routes from:
 
----------------------------------------------------------------------
+  - routes/index.tsx
 
-7. SINGLE BUILD + STRICT ISOLATION
+  - any route configuration files
 
-Deployment target:
+  - sidebar/menu configuration (e.g. menu-items.ts)
 
-- Single Vite build
+- These routes must NOT be migrated, preserved, or refactored.
 
-- Public at /
+- They must NOT be included in parity checks.
 
-- Admin at /admin
+- They must NOT be reintroduced later.
 
-- Shared repo, isolated styling
+Reference:
 
-CSS/SCSS isolation mandatory:
+DARKONE_ASSET_[MAP.md](http://MAP.md) is the only allowed source for valid admin module structure.
 
-- No leakage between admin and public
+Important:
 
-- No shared styling assumptions
+There are approximately 30–40 demo routes that must be excluded.
 
-- No global override contamination
+Lovable must not assume they are needed.
 
----------------------------------------------------------------------
+Lovable must not “keep them for safety”.
 
-8. EXTERNAL SUPABASE ONLY
+Reporting Requirement:
 
-- No Lovable Cloud DB
+After cleanup, Lovable must report:
 
-- Supabase external only
+- Total routes removed
 
-- No hidden DB coupling
+- Remaining active admin routes
 
-- No local mock DB after integration phase
+- Confirmation that no demo routes remain accessible
 
----------------------------------------------------------------------
+Hard Rule:
 
-9. BUILD INTEGRITY RULE (HARD STOP)
+Demo routes are not part of the project architecture and must not survive Phase 0.
 
-If:
-
-- Build fails
-
-- Runtime errors appear
-
-- Console errors increase
-
-- Routing breaks
-
-- Layout shifts unexpectedly
-
-STOP immediately.
-
-Do not continue.
-
-Report issue.
-
-Await instruction.
-
----------------------------------------------------------------------
-
-10. REPORTING MANDATORY (NO EXCEPTIONS)
-
-After every task, Lovable must report:
-
-- What was implemented
-
-- What was partially implemented
-
-- What was skipped
-
-- What errors occurred
-
-- Restore Point reference
-
-- Scope confirmation
-
-Missing report = governance breach.
-
----------------------------------------------------------------------
-
-11. VIOLATION PROTOCOL
-
-If a rule is violated:
-
-1) STOP immediately
-
-2) Report deviation
-
-3) Revert to last Restore Point
-
-4) Await further instructions
-
-No silent fixes.
-
-No hidden adjustments.
-
----------------------------------------------------------------------
-
-12. MANDATORY PRE-TASK COMPLIANCE CHECKLIST
-
-Before starting ANY task, Lovable must confirm:
-
-[ ] Guardian Rules referenced
-
-[ ] Execution order validated
-
-[ ] Restore Point created
-
-[ ] No duplicate code detected
-
-[ ] No custom UI libraries added
-
-[ ] Darkone 1:1 confirmed (if admin)
-
-[ ] Gorent 1:1 confirmed (if frontend)
-
-[ ] Build currently stable
-
-[ ] Out-of-scope untouched
-
-No checklist confirmation → No execution.
-
----------------------------------------------------------------------
-
-13. SCOPE CREEP ZERO TOLERANCE
-
-No:
-
-- Improvements outside instruction
-
-- Refactoring without permission
-
-- Enhancements beyond spec
-
-- “Best practice” substitutions
-
-- Autonomous optimizations
-
-If uncertain → ASK.
-
----------------------------------------------------------------------
-
-14. FINAL RULE — STOP / ASK / WAIT
-
-If any uncertainty exists:
-
-STOP.
-
-ASK.
-
-WAIT.
-
-Never assume.
-
-END OF DOCUMENT  
+STOP after cleanup and await further instruction.  
   
-Technical Details
+Known Issues
 
-- 1 file created
-- No code, routing, styling, dependency, schema, or RLS changes
-- Stop after creation, await further instructions
+- apexcharts type error: pre-existing, unrelated, not addressed
