@@ -1,14 +1,16 @@
 # Saya Car Center & Rental — Task Backlog
 
-**Version**: 1.0
-**Status**: Planning — No Execution
-**Date**: 2026-02-22
+**Version**: 2.0
+**Status**: Phase 10 Ready — Awaiting Implementation
+**Date**: 2026-02-23
 
 ---
 
 ## Execution Order
 
 Tasks must be executed in the order listed. Each group must be completed and verified before proceeding to the next.
+
+**Current Gate**: Phase 10 must be completed and formally approved before any DB Wave begins.
 
 ---
 
@@ -22,6 +24,32 @@ The following are explicitly **not in scope** for any task in this backlog:
 - ❌ Booking calendar system
 - ❌ Mobile app
 - ❌ Customer accounts
+
+---
+
+## Phase 10 — Frontend 1:1 Parity Import (NEXT)
+
+**Prerequisite**: Phase 0 CLOSED + Admin LOCKED ✅
+**Goal**: Import Gorent HomeOne template into `src/apps/public/` with full visual 1:1 parity (static data only).
+**Governance**: Bootstrap/FontAwesome/Flaticon allowed inside `.public-scope` only (Delroy-approved clarification).
+
+| Task | Scope | Gate |
+|---|---|---|
+| 10.1 | Create Restore Point (RP-Phase10-Step1-FrontendParityImport) | Confirm before proceeding |
+| 10.2 | Install missing deps (framer-motion, react-fast-marquee, react-countup, react-intersection-observer, @ramonak/react-progress-bar) | Build compiles |
+| 10.3 | Copy assets (CSS + fonts + images) to `src/apps/public/assets/` | Asset count matches template |
+| 10.4 | Copy data files to `src/apps/public/data/` | No type errors |
+| 10.5 | Copy context + link content to `src/apps/public/components/` | No circular imports |
+| 10.6 | Copy element components to `src/apps/public/components/elements/` | No missing deps |
+| 10.7 | Copy section components to `src/apps/public/sections/` | All importable |
+| 10.8 | Fix all import paths (react-router v7 → v6, relative paths) | Zero unresolved imports |
+| 10.9 | Create PublicLayout.tsx + HomeOne.tsx page | Components render |
+| 10.10 | Wire public routes in unified router (App.tsx) | Both `/` and `/admin/*` work |
+| 10.11 | CSS scoping verification (no leakage) | No style leakage |
+| 10.12 | Visual parity verification (20-point checklist) | All sections render 1:1 |
+| 10.13 | Final build + Phase 10 completion report | Build compiles, no new errors |
+
+**STOP after Task 10.13**: Formal parity approval required before DB Waves.
 
 ---
 
@@ -405,23 +433,12 @@ The following are explicitly **not in scope** for any task in this backlog:
 
 - **Objective**: Connect public site sections to database.
 - **Inputs**: Phase 10 section-to-component mapping, Phase 5 tables
-- **Output**: Each public section reads from its corresponding table:
-  - Header/Footer → site_settings
-  - BannerOne → hero_slides
-  - ServiceOne → services
-  - AboutOne → about_content + about_progress_items
-  - ListingOne → vehicles (active only)
-  - WhychooseOne → why_choose_items
-  - TestimonialOne → testimonials
-  - GalleryHomeOne → gallery_items (limit 6)
-  - BrandOne → brand_partners
-  - LetsTalk → cta_banners
-  - QuickRequest → vehicles (dropdown) + quick_requests (write)
+- **Output**: Each public section reads from its corresponding table
 - **Acceptance Checks**:
   - All sections render data from database
   - Only active/published content displayed
   - Quick Request form submits to quick_requests table
-  - Fallback behavior if no data (empty state or static fallback)
+  - Fallback behavior if no data
 - **STOP**: Visual comparison with static version.
 
 ---
@@ -432,14 +449,7 @@ The following are explicitly **not in scope** for any task in this backlog:
 
 - **Objective**: Run all test scenarios from Phase 8 §9.
 - **Inputs**: Phase 8 §9 (40+ test scenarios)
-- **Output**: All tests pass per expected results:
-  - §9.1 Super Admin Tests (SA-1 to SA-7)
-  - §9.2 Content Manager Tests (CM-1 to CM-10)
-  - §9.3 Sales Manager Tests (SM-1 to SM-10)
-  - §9.4 Rental Manager Tests (RM-1 to RM-10)
-  - §9.5 Public Tests (PUB-1 to PUB-11)
-  - §9.6 Media Access Tests (MA-1 to MA-6)
-  - §9.7 Cross-Domain Visibility Tests (CD-1 to CD-5)
+- **Output**: All tests pass per expected results
 - **Acceptance Checks**: 100% pass rate on all scenarios
 - **STOP**: Document results. Any failures must be resolved before sign-off.
 
