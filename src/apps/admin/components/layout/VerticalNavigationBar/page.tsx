@@ -1,6 +1,6 @@
-import { getMenuItems } from '@/helpers/Manu'
-import SimplebarReactClient from '@/components/wrapper/SimplebarReactClient'
-import LogoBox from '@/components/wrapper/LogoBox'
+import { getMenuItems } from '@/apps/admin/helpers/Manu'
+import SimplebarReactClient from '@/apps/admin/components/wrapper/SimplebarReactClient'
+import LogoBox from '@/apps/admin/components/wrapper/LogoBox'
 import AppMenu from './components/AppMenu'
 
 const page = () => {

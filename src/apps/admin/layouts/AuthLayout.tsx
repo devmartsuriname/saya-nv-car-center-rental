@@ -1,5 +1,5 @@
-import ErrorBoundary from '@/components/ErrorBoundary'
-import FallbackLoading from '@/components/FallbackLoading'
+import ErrorBoundary from '@/apps/admin/components/ErrorBoundary'
+import FallbackLoading from '@/apps/admin/components/FallbackLoading'
 import { ChildrenType } from '@/types/component-props'
 import { Suspense } from 'react'
 

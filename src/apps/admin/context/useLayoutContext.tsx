@@ -3,8 +3,8 @@ import type { ChildrenType } from '@/types/component-props'
 import type { LayoutState, LayoutType, MenuType, OffcanvasControlType, LayoutOffcanvasStatesType, ThemeType } from '@/types/context'
 
 import { toggleDocumentAttribute } from '@/utils/layout'
-import useQueryParams from '@/hooks/useQueryParams'
-import useLocalStorage from '@/hooks/useLocalStorage'
+import useQueryParams from '@/apps/admin/hooks/useQueryParams'
+import useLocalStorage from '@/shared/hooks/useLocalStorage'
 
 const ThemeContext = createContext<LayoutType | undefined>(undefined)
 

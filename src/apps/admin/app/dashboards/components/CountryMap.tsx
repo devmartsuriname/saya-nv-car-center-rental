@@ -1,5 +1,5 @@
-import WorldVectorMap from '@/components/VectorMap/WorldMap'
-import IconifyIcon from '@/components/wrapper/IconifyIcon'
+import WorldVectorMap from '@/apps/admin/components/VectorMap/WorldMap'
+import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
 import { Card, CardBody, CardHeader, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'react-bootstrap'
 
 const CountryMap = () => {

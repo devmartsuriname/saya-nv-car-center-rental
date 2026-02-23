@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import error404Img from '@/assets/images/404.svg'
-import logoDark from '@/assets/images/logo-dark.png'
-import logoLight from '@/assets/images/logo-light.png'
+import error404Img from '@/apps/admin/assets/images/404.svg'
+import logoDark from '@/apps/admin/assets/images/logo-dark.png'
+import logoLight from '@/apps/admin/assets/images/logo-light.png'
 
 import { Card, CardBody, Col, Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'

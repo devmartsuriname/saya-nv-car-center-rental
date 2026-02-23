@@ -1,7 +1,7 @@
 import { Col, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import IconifyIcon from './wrapper/IconifyIcon'
-import { DEFAULT_PAGE_TITLE } from '@/context/constants'
+import { DEFAULT_PAGE_TITLE } from '@/apps/admin/context/constants'
 import { Helmet } from 'react-helmet-async'
 
 const PageTitle = ({ title, subName }: { title: string; subName: string }) => {

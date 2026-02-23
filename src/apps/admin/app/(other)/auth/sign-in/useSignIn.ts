@@ -5,9 +5,9 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import * as yup from 'yup'
 
-import { useAuthContext } from '@/context/useAuthContext'
-import { useNotificationContext } from '@/context/useNotificationContext'
-import httpClient from '@/helpers/httpClient'
+import { useAuthContext } from '@/apps/admin/context/useAuthContext'
+import { useNotificationContext } from '@/apps/admin/context/useNotificationContext'
+import httpClient from '@/apps/admin/helpers/httpClient'
 import type { UserType } from '@/types/auth'
 
 const useSignIn = () => {

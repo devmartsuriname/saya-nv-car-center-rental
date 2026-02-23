@@ -1,4 +1,4 @@
-import IconifyIcon from '@/components/wrapper/IconifyIcon'
+import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
 import { ApexOptions } from 'apexcharts'
 import ReactApexChart from 'react-apexcharts'
 import { Card, CardBody, Col, Row } from 'react-bootstrap'

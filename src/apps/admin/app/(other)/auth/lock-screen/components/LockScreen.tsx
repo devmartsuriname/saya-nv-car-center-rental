@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import DarkLogo from '@/assets/images/logo-dark.png'
-import LightLogo from '@/assets/images/logo-light.png'
+import DarkLogo from '@/apps/admin/assets/images/logo-dark.png'
+import LightLogo from '@/apps/admin/assets/images/logo-light.png'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
-import TextFormInput from '@/components/from/TextFormInput'
+import TextFormInput from '@/apps/admin/components/from/TextFormInput'
 import { Card, CardBody, Col, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 

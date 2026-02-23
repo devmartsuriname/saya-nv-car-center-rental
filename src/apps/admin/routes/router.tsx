@@ -1,11 +1,11 @@
 import { Navigate, Route, Routes, type RouteProps } from 'react-router-dom'
 import { Suspense } from 'react'
-import AdminLayout from '@/layouts/AdminLayout'
-import AuthLayout from '@/layouts/AuthLayout'
-import ErrorBoundary from '@/components/ErrorBoundary'
-import LoadingFallback from '@/components/LoadingFallback'
-import { appRoutes, authRoutes } from '@/routes/index'
-import { useAuthContext } from '@/context/useAuthContext'
+import AdminLayout from '@/apps/admin/layouts/AdminLayout'
+import AuthLayout from '@/apps/admin/layouts/AuthLayout'
+import ErrorBoundary from '@/apps/admin/components/ErrorBoundary'
+import LoadingFallback from '@/apps/admin/components/LoadingFallback'
+import { appRoutes, authRoutes } from '@/apps/admin/routes/index'
+import { useAuthContext } from '@/apps/admin/context/useAuthContext'
 
 const AppRouter = (props: RouteProps) => {
   const { isAuthenticated } = useAuthContext()
