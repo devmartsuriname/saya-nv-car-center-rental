@@ -1,11 +1,9 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import PublicLayout from '@/apps/public/layouts/PublicLayout'
 import HomeOne from '@/apps/public/pages/home-one/HomeOne'
-import AppProvidersWrapper from '@/apps/admin/components/wrapper/AppProvidersWrapper'
-import configureFakeBackend from '@/apps/admin/helpers/fake-backend'
-import AppRouter from '@/apps/admin/routes/router'
 
-configureFakeBackend()
+const AdminApp = lazy(() => import('@/apps/admin/AdminApp'))
 
 const AppContent = () => {
   const location = useLocation()
@@ -13,9 +11,9 @@ const AppContent = () => {
 
   if (isAdmin) {
     return (
-      <AppProvidersWrapper>
-        <AppRouter />
-      </AppProvidersWrapper>
+      <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading...</div>}>
+        <AdminApp />
+      </Suspense>
     )
   }
 

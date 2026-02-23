@@ -50,13 +50,14 @@ src/
 
 Single Vite app with two route trees:
 - `src/apps/public/` — Car Center / Car Rental website (from Gorent React) — **Phase 10: IMPORTED + CORRECTED**
-- `src/apps/admin/` — Darkone admin dashboard — **frozen**
+- `src/apps/admin/` — Darkone admin dashboard — **frozen, lazy-loaded**
 
-Style isolation via wrapper classes (`.admin-scope`, `.public-scope`). Unified `react-router-dom` v6 routing with location-based branching in `AppContent`.
+Style isolation via wrapper classes (`.admin-scope`, `.public-scope`) + **admin lazy loading** (React.lazy). Unified `react-router-dom` v6 routing with location-based branching in `AppContent`.
 
-## Style Isolation (Corrected)
+## Style Isolation (Corrected — v2: Lazy Loading)
 
-- **Admin SCSS**: Imported in `AdminLayout.tsx` (NOT in `main.tsx`) — scoped to admin tree only
+- **Admin branch**: Lazy-loaded via `React.lazy(() => import('./apps/admin/AdminApp'))` in `App.tsx`. This creates a Vite code-split boundary — admin SCSS (including "Play" font) is never loaded on public routes.
+- **Admin SCSS**: Imported in `AdminLayout.tsx` — only loads when admin chunk is fetched
 - **Public CSS**: `style.css` imported in `PublicLayout.tsx` (handles all sub-imports internally)
 - **No cross-imports**: Admin fonts (Play) cannot leak into public; Gorent fonts (Roboto/Inter Tight) cannot leak into admin
 
