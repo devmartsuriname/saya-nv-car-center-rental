@@ -2,7 +2,7 @@ import LeftSideBarToggle from './components/LeftSideBarToggle'
 import ProfileDropdown from './components/ProfileDropdown'
 import ThemeModeToggle from './components/ThemeModeToggle'
 import { Container } from 'react-bootstrap'
-import IconifyIcon from '@/components/wrapper/IconifyIcon'
+import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
 import Notifications from './components/Notifications'
 
 const page = () => {

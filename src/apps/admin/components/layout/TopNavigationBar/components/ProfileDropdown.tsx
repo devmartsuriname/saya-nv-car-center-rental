@@ -1,6 +1,6 @@
-import avatar1 from '@/assets/images/users/avatar-1.jpg'
-import IconifyIcon from '@/components/wrapper/IconifyIcon'
-import { useAuthContext } from '@/context/useAuthContext'
+import avatar1 from '@/apps/admin/assets/images/users/avatar-1.jpg'
+import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
+import { useAuthContext } from '@/apps/admin/context/useAuthContext'
 import { Dropdown, DropdownHeader, DropdownItem, DropdownMenu, DropdownToggle } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 

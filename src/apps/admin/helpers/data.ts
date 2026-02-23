@@ -3,9 +3,9 @@ import {
   pricingData,
   projectsData,
   // timelineData,
-} from '@/assets/data/other'
-import { emailsData, socialGroupsData } from '@/assets/data/social'
-import { notificationsData } from '@/assets/data/topbar'
+} from '@/apps/admin/assets/data/other'
+import { emailsData, socialGroupsData } from '@/apps/admin/assets/data/social'
+import { notificationsData } from '@/apps/admin/assets/data/topbar'
 import {
   EmailCountType,
   Employee,

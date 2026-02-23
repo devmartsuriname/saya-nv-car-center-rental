@@ -1,6 +1,6 @@
-import { AuthProvider } from '@/context/useAuthContext'
-import { LayoutProvider } from '@/context/useLayoutContext'
-import { NotificationProvider } from '@/context/useNotificationContext'
+import { AuthProvider } from '@/apps/admin/context/useAuthContext'
+import { LayoutProvider } from '@/apps/admin/context/useLayoutContext'
+import { NotificationProvider } from '@/apps/admin/context/useNotificationContext'
 import { ChildrenType } from '@/types/component-props'
 import { HelmetProvider } from 'react-helmet-async'
 

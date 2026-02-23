@@ -1,5 +1,5 @@
-import IconifyIcon from '@/components/wrapper/IconifyIcon'
-import { findAllParent, findMenuItem, getMenuItemFromURL } from '@/helpers/Manu'
+import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
+import { findAllParent, findMenuItem, getMenuItemFromURL } from '@/apps/admin/helpers/Manu'
 import { MenuItemType, SubMenus } from '@/types/menu'
 import clsx from 'clsx'
 import { Fragment, MouseEvent, useCallback, useEffect, useState } from 'react'

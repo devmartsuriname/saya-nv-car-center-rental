@@ -1,6 +1,6 @@
-import IconifyIcon from '@/components/wrapper/IconifyIcon'
-import { useLayoutContext } from '@/context/useLayoutContext'
-import useViewPort from '@/hooks/useViewPort'
+import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
+import { useLayoutContext } from '@/apps/admin/context/useLayoutContext'
+import useViewPort from '@/shared/hooks/useViewPort'
 import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 

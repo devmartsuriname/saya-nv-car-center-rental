@@ -1,5 +1,5 @@
-import IconifyIcon from '@/components/wrapper/IconifyIcon'
-import { useLayoutContext } from '@/context/useLayoutContext'
+import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
+import { useLayoutContext } from '@/apps/admin/context/useLayoutContext'
 
 const ThemeModeToggle = () => {
   const { theme, changeTheme } = useLayoutContext()

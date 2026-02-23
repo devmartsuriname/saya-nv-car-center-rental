@@ -1,6 +1,6 @@
 import { Card, Col, Row } from 'react-bootstrap'
-import PageTitle from '@/components/PageTitle'
-import IconifyIcon from '@/components/wrapper/IconifyIcon'
+import PageTitle from '@/apps/admin/components/PageTitle'
+import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
 
 interface ComingSoonProps {
   title: string

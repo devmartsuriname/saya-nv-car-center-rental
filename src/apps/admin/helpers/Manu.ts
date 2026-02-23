@@ -1,4 +1,4 @@
-import { MENU_ITEMS } from '@/assets/data/menu-items'
+import { MENU_ITEMS } from '@/apps/admin/assets/data/menu-items'
 import type { MenuItemType } from '@/types/menu'
 
 export const getMenuItems = (): MenuItemType[] => {

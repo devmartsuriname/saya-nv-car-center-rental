@@ -1,13 +1,13 @@
-import AnimationStar from '@/components/AnimationStar'
-import ErrorBoundary from '@/components/ErrorBoundary'
-import LoadingFallback from '@/components/LoadingFallback'
-import Footer from '@/components/layout/Footer'
+import AnimationStar from '@/apps/admin/components/AnimationStar'
+import ErrorBoundary from '@/apps/admin/components/ErrorBoundary'
+import LoadingFallback from '@/apps/admin/components/LoadingFallback'
+import Footer from '@/apps/admin/components/layout/Footer'
 import { ChildrenType } from '@/types/component-props'
 import { lazy, Suspense } from 'react'
 import { Container } from 'react-bootstrap'
 
-const TopNavigationBar = lazy(() => import('@/components/layout/TopNavigationBar/page'))
-const VerticalNavigationBar = lazy(() => import('@/components/layout/VerticalNavigationBar/page'))
+const TopNavigationBar = lazy(() => import('@/apps/admin/components/layout/TopNavigationBar/page'))
+const VerticalNavigationBar = lazy(() => import('@/apps/admin/components/layout/VerticalNavigationBar/page'))
 
 const AdminLayout = ({ children }: ChildrenType) => {
   return (
