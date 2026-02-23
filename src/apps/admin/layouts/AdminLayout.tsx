@@ -1,3 +1,4 @@
+import '@/apps/admin/assets/scss/style.scss'
 import AnimationStar from '@/apps/admin/components/AnimationStar'
 import ErrorBoundary from '@/apps/admin/components/ErrorBoundary'
 import LoadingFallback from '@/apps/admin/components/LoadingFallback'

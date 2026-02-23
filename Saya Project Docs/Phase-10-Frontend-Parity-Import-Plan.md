@@ -399,13 +399,17 @@ Note: All Gorent `react-router` v7 imports will be changed to `react-router-dom`
 - [ ] Mobile nav — NOT YET TESTED (deferred)
 - [x] Scroll to top works
 
-### CSS Isolation Verification (Task 10.11) — COMPLETED
+### CSS Isolation Verification (Task 10.11) — COMPLETED + CORRECTED
 
 - [x] `/` renders HomeOne with Gorent styling (`.public-scope` active)
 - [x] `/admin/auth/sign-in` renders Darkone login — no Gorent leakage
 - [x] `/admin/dashboards` renders full dashboard — no Gorent leakage
 - [x] No Bootstrap/FontAwesome from public scope visible in admin
 - [x] No admin SCSS visible in public scope
+- [x] **CORRECTED**: Admin SCSS moved from `main.tsx` to `AdminLayout.tsx` — eliminates "Play" font leak
+- [x] **CORRECTED**: Duplicate CSS imports removed from `PublicLayout.tsx` — `style.css` handles all sub-imports
+- [x] **CORRECTED**: Login/Register/Cart links removed from public Header
+- [x] **CORRECTED**: MainManuList simplified for HomeOne single-page MVP (anchor links only)
 
 ### Routing Fix Applied During Verification
 
@@ -415,7 +419,7 @@ Admin routes use full paths (`/admin/auth/sign-in`). Nesting under `<Route path=
 
 ## 10. Phase 10 Completion Report
 
-**Date**: 2026-02-23
+**Date**: 2026-02-23 (Updated after parity corrections)
 
 ### Implemented
 - All 13 tasks (10.1–10.13) completed
@@ -429,8 +433,19 @@ Admin routes use full paths (`/admin/auth/sign-in`). Nesting under `<Route path=
 - PublicLayout.tsx created with `.public-scope` wrapper
 - HomeOne.tsx page created with 14 sections + StrickyHeader
 - App.tsx routing fixed with location-based branching
-- CSS isolation verified — no leakage in either direction
-- Visual parity verified — all HomeOne sections render structurally correct
+
+### Parity Corrections Applied
+- **Font leak fixed**: Admin SCSS import moved from `main.tsx` to `AdminLayout.tsx`
+- **CSS double-import fixed**: Removed individual CSS imports from `PublicLayout.tsx` (style.css handles all sub-imports)
+- **Public auth removed**: Login/Register/Cart links removed from Header.tsx
+- **Nav simplified**: MainManuList.tsx now uses onePageManuList anchor links for HomeOne MVP
+
+### Files Changed in Correction
+1. `src/main.tsx` — Removed admin SCSS import
+2. `src/apps/admin/layouts/AdminLayout.tsx` — Added admin SCSS import
+3. `src/apps/public/layouts/PublicLayout.tsx` — Removed duplicate CSS imports
+4. `src/apps/public/sections/common/Header.tsx` — Removed Login/Register/Cart
+5. `src/apps/public/components/elements/MainManuList.tsx` — Simplified to anchor nav
 
 ### Partial
 - Mobile responsiveness not yet tested
@@ -446,9 +461,6 @@ Admin routes use full paths (`/admin/auth/sign-in`). Nesting under `<Route path=
 
 ### Build Status
 - Compiles successfully (only known apexcharts type error)
-
-### Dependency Diff
-- Added: framer-motion, react-fast-marquee, react-countup, react-intersection-observer, @ramonak/react-progress-bar, swiper@^12.0.3
 
 ---
 

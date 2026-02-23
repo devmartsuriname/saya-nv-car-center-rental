@@ -2,12 +2,7 @@ import React from 'react';
 import ContextProvider from '../components/context/ContextProvider';
 
 // Gorent template CSS - loaded exclusively inside .public-scope
-import '../assets/css/bootstrap.min.css';
-import '../assets/css/font-awesome-all.css';
-import '../assets/css/flaticon.css';
-import '../assets/css/animate.min.css';
-import '../assets/css/custom-animate.css';
-import '../assets/css/nice-select.css';
+// style.css internally imports bootstrap, font-awesome, flaticon, animate, custom-animate, nice-select
 import '../assets/css/style.css';
 
 // Swiper CSS

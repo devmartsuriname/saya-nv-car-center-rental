@@ -1,9 +1,9 @@
 # Architecture
 
-## Status: Phase 0 Complete — Phase 10 COMPLETED
+## Status: Phase 0 Complete — Phase 10 COMPLETED (Corrections Applied)
 
 Phase 0 — Repo Stabilization is complete. Admin structure has been migrated, isolated, and locked.
-Phase 10 — Frontend 1:1 Parity Import is COMPLETED. All 13 tasks verified. Awaiting formal parity approval.
+Phase 10 — Frontend 1:1 Parity Import is COMPLETED. All 13 tasks verified + parity corrections applied. Awaiting formal parity approval.
 
 ## Project Documentation
 
@@ -18,8 +18,8 @@ All project-specific documentation is maintained in `/Saya Project Docs/`.
 
 ```text
 src/
-  main.tsx                    # Single Vite entry point
-  App.tsx                     # Top-level router mount
+  main.tsx                    # Single Vite entry point (NO admin SCSS import)
+  App.tsx                     # Top-level router mount (location-based branching)
   apps/
     admin/                    # Darkone admin (route: /admin/*) — LOCKED
       app/                    # Admin app shell
@@ -27,14 +27,14 @@ src/
       context/                # Auth context, theme context
       helpers/                # Admin helper utilities (fake-backend)
       hooks/                  # Admin-specific hooks
-      layouts/                # AdminLayout.tsx (.admin-scope wrapper)
+      layouts/                # AdminLayout.tsx (.admin-scope wrapper + admin SCSS import)
       routes/                 # Admin route definitions
       assets/                 # Admin SCSS + images
-    public/                   # Public site — Phase 10 IMPORTED
+    public/                   # Public site — Phase 10 IMPORTED + CORRECTED
       assets/                 # Gorent CSS, fonts, images (scoped under .public-scope)
       components/             # Context, elements, link-content (16 elements, 4 context, 2 link-content)
       data/                   # Static data files (listing, service, testimonials, gallery, why-choose)
-      layouts/                # PublicLayout.tsx (.public-scope wrapper)
+      layouts/                # PublicLayout.tsx (.public-scope wrapper, imports style.css only)
       pages/                  # HomeOne.tsx (14 sections + StrickyHeader)
       sections/               # home-one/ (11 sections) + common/ (4 sections)
   shared/                     # Shared utilities — LOCKED
@@ -49,10 +49,16 @@ src/
 ## Architecture
 
 Single Vite app with two route trees:
-- `src/apps/public/` — Car Center / Car Rental website (from Gorent React) — **Phase 10: IMPORTED**
+- `src/apps/public/` — Car Center / Car Rental website (from Gorent React) — **Phase 10: IMPORTED + CORRECTED**
 - `src/apps/admin/` — Darkone admin dashboard — **frozen**
 
 Style isolation via wrapper classes (`.admin-scope`, `.public-scope`). Unified `react-router-dom` v6 routing with location-based branching in `AppContent`.
+
+## Style Isolation (Corrected)
+
+- **Admin SCSS**: Imported in `AdminLayout.tsx` (NOT in `main.tsx`) — scoped to admin tree only
+- **Public CSS**: `style.css` imported in `PublicLayout.tsx` (handles all sub-imports internally)
+- **No cross-imports**: Admin fonts (Play) cannot leak into public; Gorent fonts (Roboto/Inter Tight) cannot leak into admin
 
 ## Phase 10 Governance
 

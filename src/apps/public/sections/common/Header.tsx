@@ -40,11 +40,6 @@ const Header: React.FC = () => {
                         </li>
                     </ul>
                     <div className="main-menu__top-right">
-                        <div className="main-menu__top-login-reg-box">
-                            <Link to="/inner/login">Login</Link>
-                            <p>or</p>
-                            <Link to="/inner/sign-up">Register</Link>
-                        </div>
                         <div className="main-menu__social">
                             <a href="#"><i className="icon-facebook"></i></a>
                             <a href="#"><i className="icon-twitter"></i></a>
@@ -70,12 +65,6 @@ const Header: React.FC = () => {
                             <div className="main-menu__search-cart-box">
                                 <div className="main-menu__search-box" onClick={() => setIsSearch((pre) => !pre)}>
                                     <a href="#" className="main-menu__search search-toggler icon-search"></a>
-                                </div>
-                                <div className="main-menu__cart-box">
-                                    <Link to="/inner/cart" className="main-menu__cart">
-                                        <span className="far fa-shopping-cart"></span>
-                                        <span className="main-menu__cart-count">0{cartCount}</span>
-                                    </Link>
                                 </div>
                             </div>
                         </div>

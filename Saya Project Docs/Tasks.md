@@ -27,12 +27,12 @@ The following are explicitly **not in scope** for any task in this backlog:
 
 ---
 
-## Phase 10 — Frontend 1:1 Parity Import — ✅ COMPLETED
+## Phase 10 — Frontend 1:1 Parity Import — ✅ COMPLETED (Corrections Applied)
 
 **Prerequisite**: Phase 0 CLOSED + Admin LOCKED ✅
 **Goal**: Import Gorent HomeOne template into `src/apps/public/` with full visual 1:1 parity (static data only).
 **Governance**: Bootstrap/FontAwesome/Flaticon allowed inside `.public-scope` only (Delroy-approved clarification).
-**Status**: ALL 13 TASKS COMPLETED
+**Status**: ALL 13 TASKS COMPLETED + PARITY CORRECTIONS APPLIED
 
 | Task | Scope | Status |
 |---|---|---|
@@ -46,9 +46,11 @@ The following are explicitly **not in scope** for any task in this backlog:
 | 10.8 | Fix all import paths | ✅ Done (react-router v7→v6, all-content→data/) |
 | 10.9 | Create PublicLayout + HomeOne | ✅ Done |
 | 10.10 | Wire public routes in unified router | ✅ Done (location-based branching) |
-| 10.11 | CSS scoping verification | ✅ Done (no leakage) |
-| 10.12 | Visual parity verification | ✅ Done (all sections render) |
+| 10.11 | CSS scoping verification | ✅ Done + Corrected (font leak fixed, double-imports removed) |
+| 10.12 | Visual parity verification | ✅ Done (all sections render, auth links removed, nav simplified) |
 | 10.13 | Final build + completion report | ✅ Done |
+
+**Parity Corrections**: Font leak fixed (admin SCSS moved to AdminLayout), CSS double-imports removed, Login/Register/Cart removed from public, nav simplified for HomeOne MVP.
 
 **AWAITING FORMAL PARITY APPROVAL before DB Waves.**
 
