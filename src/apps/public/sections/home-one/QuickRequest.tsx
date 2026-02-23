@@ -89,7 +89,7 @@ const QuickRequest: React.FC = () => {
                                                         <span className="icon-pin-2"></span> Phone
                                                     </p>
                                                     <input
-                                                        type="tel"
+                                                        type="text"
                                                         placeholder="Your Phone Number"
                                                         value={phone}
                                                         onChange={(e) => setPhone(e.target.value)}

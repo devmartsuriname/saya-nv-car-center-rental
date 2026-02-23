@@ -3,11 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import MainManuList from '../../components/elements/MainManuList';
 import logoOne from "../../assets/images/resources/logo-1.png";
 import useGorentContext from '../../components/context/useGorentContext';
-import { onePageManuListOne, onePageManuListThree } from '../../components/link-content/NavLink';
+import { onePageManuListOne } from '../../components/link-content/NavLink';
 const StrickyHeader: React.FC = () => {
-    const { setIsSearch, setIsSidebar, cartCount } = useGorentContext();
+    const { setIsSearch, setIsSidebar } = useGorentContext();
     const [isStick, setIsSticky] = useState<boolean>(false);
-    const pathName = useLocation()?.pathname;
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 200) {
@@ -35,17 +34,11 @@ const StrickyHeader: React.FC = () => {
                         <div className="main-menu__middle-box">
                             <div className="main-menu__main-menu-box">
                                 <a href="#" className="mobile-nav__toggler"><i className="fa fa-bars"></i></a>
-                                <MainManuList onePageManuList={pathName === "/index-one-page" ? onePageManuListOne : onePageManuListThree} />
+                                <MainManuList onePageManuList={onePageManuListOne} />
                             </div>
                             <div className="main-menu__search-cart-box">
                                 <div className="main-menu__search-box" onClick={() => setIsSearch((pre) => !pre)}>
                                     <a href="#" className="main-menu__search search-toggler icon-search"></a>
-                                </div>
-                                <div className="main-menu__cart-box">
-                                    <Link to="/inner/cart" className="main-menu__cart">
-                                        <span className="far fa-shopping-cart"></span>
-                                        <span className="main-menu__cart-count">0{cartCount}</span>
-                                    </Link>
                                 </div>
                             </div>
                         </div>
