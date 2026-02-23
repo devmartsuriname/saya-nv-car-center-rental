@@ -6887,8 +6887,8 @@ xs sidebar
 
 .booking-one__input-box input[type="text"],
 .booking-one__input-box input[type="date"],
-.booking-one__input-box input[type="email"] {
-  height: 50px;
+.booking-one__input-box input[type="email"],
+.booking-one__input-box textarea {
   width: 100%;
   background-color: transparent;
   border: 1px solid var(--gorent-bdr-color);
@@ -6900,6 +6900,18 @@ xs sidebar
   font-weight: 400;
   color: var(--gorent-gray);
   display: block;
+}
+
+.booking-one__input-box input[type="text"],
+.booking-one__input-box input[type="date"],
+.booking-one__input-box input[type="email"] {
+  height: 50px;
+}
+
+.booking-one__input-box textarea {
+  height: 100px;
+  padding-top: 12px;
+  resize: none;
 }
 
 .booking-one__input-box .select-box {
