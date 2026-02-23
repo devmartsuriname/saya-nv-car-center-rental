@@ -1,219 +1,142 @@
-# Phase 10 — Parity Correction Plan
+# Phase 10 — Parity Correction Plan (Font Leak + Header + Gallery)
 
-## Issues Identified
+## Root Cause Analysis
 
-### Issue 1: Font Leak (Admin "Play" font bleeding into Public)
+### Issue 1: Font Leak — CONFIRMED, NOT YET FIXED
 
-- **Root cause**: `src/main.tsx` line 8 imports `@/apps/admin/assets/scss/style.scss` **globally**. This SCSS compiles Bootstrap with `$font-family-primary: "Play"` and sets CSS custom properties on `:root` and `body` (e.g., `--bs-body-font-family: "Play"`). Since these target `body` and `:root`, they override the Gorent CSS variables (`--gorent-font: "Roboto"`) globally.
-- **Fix**: The admin SCSS import must be moved from `main.tsx` into `AdminLayout.tsx` so it only loads when admin routes render. This scopes admin styles to the admin tree only.
+The admin SCSS import was moved from `main.tsx` to `AdminLayout.tsx` in the previous step. However, this does NOT fix the problem because **Vite loads CSS eagerly for all statically imported modules**.
 
-### Issue 2: CSS Double-Import
+The import chain on every page load:
 
-- **Root cause**: Gorent's `style.css` (line 22-27) already contains `@import './bootstrap.min.css'`, `@import './flaticon.css'`, `@import './font-awesome-all.css'`, etc. But `PublicLayout.tsx` ALSO imports these same files individually (lines 5-10). This loads each CSS file twice.
-- **Fix**: Remove the individual CSS imports from `PublicLayout.tsx`. Only import `style.css` (which handles all sub-imports internally) and Swiper CSS.
+```
+App.tsx 
+  -> imports AppProvidersWrapper (static)
+  -> imports AppRouter (static)
+    -> imports AdminLayout (static)
+      -> imports admin SCSS (line 1)
+        -> compiles Bootstrap with "Play" font
+        -> sets :root { --bs-body-font-family: "Play" }
+```
 
-### Issue 3: Login/Register on Public Site
+Even when visiting `/`, the admin SCSS is loaded because `App.tsx` statically imports `AppRouter` which statically imports `AdminLayout`. Vite processes all static imports at build time and injects the CSS globally.
 
-- **Root cause**: `Header.tsx` lines 43-47 contain `<Link to="/inner/login">Login</Link>` and `<Link to="/inner/sign-up">Register</Link>`. These are template demo links with no corresponding routes.
-- **Fix**: Remove the entire `main-menu__top-login-reg-box` div from `Header.tsx`. Also remove `<Link to="/inner/cart">` cart link (no cart route exists).
+**The fix**: Lazy-load the entire admin branch in `App.tsx` using `React.lazy()` so the admin module tree (and its CSS) only loads when a user navigates to `/admin/*`.
 
-### Issue 4: Section Order
+### Issue 2: Header Top Bar Alignment
 
-- **Current order** in `HomeOne.tsx` matches the template source exactly:
-Header, BannerOne, SlidingTextOne, ServiceOne, AboutOne, ListingOne, QuickRequest, WhychooseOne, TestimonialOne, VideoOne, GalleryHomeOne, BrandOne, LetsTalk, Footer, StrickyHeader
-- This matches the Gorent template's `HomeOne.tsx` 1:1. No reordering needed -- the current order IS the template order.
+The header structure in our `Header.tsx` matches the template source code. The visual misalignment is caused by the "Play" font leak overriding Gorent's "Roboto" / "Inter Tight" fonts, which changes text sizing, spacing, and line-height throughout the header. Fixing Issue 1 will resolve this.
 
-### Issue 5: Nav Menu Links to Non-Existent Pages
+### Issue 3: Gallery Section Order
 
-- `MainManuList.tsx` contains full multi-page nav with links to `/inner/about`, `/inner/services`, `/index-two`, etc. -- none of which exist. These dead links need to be simplified for HomeOne-only MVP.
+The current `HomeOne.tsx` section order is:
+Header, BannerOne, SlidingTextOne, ServiceOne, AboutOne, ListingOne, QuickRequest, WhychooseOne, TestimonialOne, VideoOne, **GalleryHomeOne**, **BrandOne**, LetsTalk, Footer, StrickyHeader
 
----
-
-## Execution Steps
-
-### Step A: Move Admin SCSS Import (Font Leak Fix)
-
-**Files changed:**
-
-- `src/main.tsx` -- Remove line `import '@/apps/admin/assets/scss/style.scss'`
-- `src/apps/admin/layouts/AdminLayout.tsx` -- Add `import '../assets/scss/style.scss'` at top
-
-This ensures admin fonts/styles only load within the admin scope, eliminating the "Play" font leak into the public site.
-
-### Step B: Fix CSS Double-Import in PublicLayout
-
-**File changed:** `src/apps/public/layouts/PublicLayout.tsx`
-
-- Remove individual imports of `bootstrap.min.css`, `font-awesome-all.css`, `flaticon.css`, `animate.min.css`, `custom-animate.css`, `nice-select.css`
-- Keep ONLY: `import '../assets/css/style.css'` (which internally imports all the others)
-- Keep Swiper CSS imports (these are separate)
-
-### Step C: Remove Public Auth Links
-
-**File changed:** `src/apps/public/sections/common/Header.tsx`
-
-- Remove the `main-menu__top-login-reg-box` div (Login/Register links, lines 43-47)
-- Remove the cart link div (`main-menu__cart-box`, lines 74-79) since there is no cart route
-
-### Step D: Simplify Nav for HomeOne MVP
-
-**File changed:** `src/apps/public/components/elements/MainManuList.tsx`
-
-- Replace multi-page dropdown nav with single-page anchor links matching the template's `onePageManuListOne` pattern (Home, About Us, Cars, Contact as simple links)
-- All links point to `/` or `#section-id` since only HomeOne exists
-
-### Step E: Verify Build + Visual Parity
-
-- Confirm build compiles (only pre-existing apexcharts error)
-- Confirm `/` renders with Roboto/Inter Tight fonts (not Play)
-- Confirm `/admin/auth/sign-in` renders with Play font (no Gorent styles)
-- Confirm no Login/Register links visible on public site
-
----
-
-## Technical Details
-
-### Font Isolation Proof (After Fix)
-
-- Public: `style.css` sets `--gorent-font: "Roboto"` and `--gorent-font-two: "Inter Tight"` via `:root`, loaded via Google Fonts import in `style.css` line 20
-- Admin: `_variables.scss` sets `$font-family-primary: "Play"` compiled into Bootstrap SCSS, loaded only inside `AdminLayout.tsx`
-- No cross-contamination possible since each CSS bundle loads only in its respective layout component
-
-### Files Modified (Total: 4)
-
-1. `src/main.tsx` -- Remove admin SCSS import
-2. `src/apps/admin/layouts/AdminLayout.tsx` -- Add admin SCSS import
-3. `src/apps/public/layouts/PublicLayout.tsx` -- Remove duplicate CSS imports
-4. `src/apps/public/sections/common/Header.tsx` -- Remove Login/Register/Cart links
-5. `src/apps/public/components/elements/MainManuList.tsx` -- Simplify nav for single-page MVP
-
-&nbsp;
-
-# Phase 10 — Parity Correction Plan
-
-## Issues Identified
-
-### Issue 1: Font Leak (Admin "Play" font bleeding into Public)
-
-- **Root cause**: `src/main.tsx` line 8 imports `@/apps/admin/assets/scss/style.scss` **globally**. This SCSS compiles Bootstrap with `$font-family-primary: "Play"` and sets CSS custom properties on `:root` and `body` (e.g., `--bs-body-font-family: "Play"`). Since these target `body` and `:root`, they override the Gorent CSS variables `--gorent-font: "Roboto"`) globally.
-
-- **Fix**: The admin SCSS import must be moved from `main.tsx` into `AdminLayout.tsx` so it only loads when admin routes render. This scopes admin styles to the admin tree only.
-
-### Issue 2: CSS Double-Import
-
-- **Root cause**: Gorent's `style.css` (line 22-27) already contains `@import './bootstrap.min.css'`, `@import './flaticon.css'`, `@import './font-awesome-all.css'`, etc. But `PublicLayout.tsx` ALSO imports these same files individually (lines 5-10). This loads each CSS file twice.
-
-- **Fix**: Remove the individual CSS imports from `PublicLayout.tsx`. Only import `style.css` (which handles all sub-imports internally) and Swiper CSS.
-
-### Issue 3: Login/Register on Public Site
-
-- **Root cause**: `Header.tsx` lines 43-47 contain `<Link to="/inner/login">Login</Link>` and `<Link to="/inner/sign-up">Register</Link>`. These are template demo links with no corresponding routes.
-
-- **Fix**: Remove the entire `main-menu__top-login-reg-box` div from `Header.tsx`. Also remove `<Link to="/inner/cart">` cart link (no cart route exists).
-
-### Issue 4: Section Order
-
-- **Current order** in `HomeOne.tsx` matches the template source exactly:
-
-  Header, BannerOne, SlidingTextOne, ServiceOne, AboutOne, ListingOne, QuickRequest, WhychooseOne, TestimonialOne, VideoOne, GalleryHomeOne, BrandOne, LetsTalk, Footer, StrickyHeader
-
-- This matches the Gorent template's `HomeOne.tsx` 1:1. No reordering needed -- the current order IS the template order.
-
-### Issue 5: Nav Menu Links to Non-Existent Pages
-
-- `MainManuList.tsx` contains full multi-page nav with links to `/inner/about`, `/inner/services`, `/index-two`, etc. -- none of which exist. These dead links need to be simplified for HomeOne-only MVP.
+This matches the Gorent template source code exactly. Gallery IS above footer (Gallery -> Brand -> LetsTalk -> Footer). No reordering needed.
 
 ---
 
 ## Execution Steps
 
-### Step A: Move Admin SCSS Import (Font Leak Fix)
+### Step A: Lazy-Load Admin Branch in App.tsx (Font Leak Fix)
 
-**Files changed:**
+**File: `src/App.tsx**`
 
-- `src/main.tsx` -- Remove line `import '@/apps/admin/assets/scss/style.scss'`
+Replace static imports of `AppProvidersWrapper` and `AppRouter` with a single lazy-loaded admin wrapper component. This ensures the admin module tree (including `AdminLayout` and its SCSS) is only fetched when the browser navigates to `/admin/*`.
 
-- `src/apps/admin/layouts/AdminLayout.tsx` -- Add `import '../assets/scss/style.scss'` at top
+Changes:
 
-This ensures admin fonts/styles only load within the admin scope, eliminating the "Play" font leak into the public site.
+- Remove static imports: `AppProvidersWrapper`, `AppRouter`, `configureFakeBackend`
+- Add lazy import: `const AdminApp = React.lazy(() => import('./apps/admin/AdminApp'))`
+- Wrap admin branch in `<Suspense>` with fallback
 
-### Step B: Fix CSS Double-Import in PublicLayout
+**New file: `src/apps/admin/AdminApp.tsx**`
 
-**File changed:** `src/apps/public/layouts/PublicLayout.tsx`
+Create a small wrapper component that:
 
-- Remove individual imports of `bootstrap.min.css`, `font-awesome-all.css`, `flaticon.css`, `animate.min.css`, `custom-animate.css`, `nice-select.css`
+- Calls `configureFakeBackend()`
+- Wraps `AppRouter` in `AppProvidersWrapper`
+- This isolates all admin imports (including SCSS) behind a dynamic import boundary
 
-- Keep ONLY: `import '../assets/css/style.css'` (which internally imports all the others)
+### Step B: Verify No Other Global Admin CSS
 
-- Keep Swiper CSS imports (these are separate)
+Confirm that after Step A, no admin CSS is imported anywhere outside the lazy-loaded admin tree. The search already confirms only `AdminLayout.tsx` imports admin SCSS.
 
-### Step C: Remove Public Auth Links
+### Step C: Build and Visual Verification
 
-**File changed:** `src/apps/public/sections/common/Header.tsx`
-
-- Remove the `main-menu__top-login-reg-box` div (Login/Register links, lines 43-47)
-
-- Remove the cart link div `main-menu__cart-box`, lines 74-79) since there is no cart route
-
-### Step D: Simplify Nav for HomeOne MVP
-
-**File changed:** `src/apps/public/components/elements/MainManuList.tsx`
-
-- Replace multi-page dropdown nav with single-page anchor links matching the template's `onePageManuListOne` pattern (Home, About Us, Cars, Contact as simple links)
-
-- All links point to `/` or `#section-id` since only HomeOne exists
-
-### Step E: Verify Build + Visual Parity
-
-- Confirm build compiles (only pre-existing apexcharts error)
-
-- Confirm `/` renders with Roboto/Inter Tight fonts (not Play)
-
-- Confirm `/admin/auth/sign-in` renders with Play font (no Gorent styles)
-
-- Confirm no Login/Register links visible on public site
+- Confirm build compiles (only pre-existing apexcharts type error)
+- Navigate to `/` and confirm Roboto/Inter Tight fonts render (not Play)
+- Navigate to `/admin/auth/sign-in` and confirm Play font renders
+- Confirm header top bar alignment matches template demo (image-7)
+- Confirm section order: Video -> Gallery -> Brand -> LetsTalk -> Footer
 
 ---
 
 ## Technical Details
 
-### Font Isolation Proof (After Fix)
+### Why Lazy Loading Fixes the Font Leak
 
-- Public: `style.css` sets `--gorent-font: "Roboto"` and `--gorent-font-two: "Inter Tight"` via `:root`, loaded via Google Fonts import in `style.css` line 20
+Vite code-splits dynamic imports into separate chunks. When `/` loads, only the public chunk (with Gorent CSS) is loaded. The admin chunk (with Darkone SCSS including "Play" font) remains unloaded until a user navigates to `/admin/*`. This achieves true CSS isolation without modifying either template's styles.
 
-- Admin: `_variables.scss` sets `$font-family-primary: "Play"` compiled into Bootstrap SCSS, loaded only inside `AdminLayout.tsx`
+### Files Modified (Total: 2)
 
-- No cross-contamination possible since each CSS bundle loads only in its respective layout component
+1. `src/App.tsx` — Replace static admin imports with lazy-loaded `AdminApp`
+2. `src/apps/admin/AdminApp.tsx` — New file: admin entry wrapper (moves `configureFakeBackend` + providers here)
 
-### Files Modified (Total: 4)
+Governance Addendum — Required Before Approval
 
-1. `src/main.tsx` -- Remove admin SCSS import
+1. Admin Lazy Loading MUST wrap the entire /admin/* branch only.
 
-2. `src/apps/admin/layouts/AdminLayout.tsx` -- Add admin SCSS import
+   Public branch must remain fully static and untouched.
 
-3. `src/apps/public/layouts/PublicLayout.tsx` -- Remove duplicate CSS imports
+2. No modifications allowed to:
 
-4. `src/apps/public/sections/common/Header.tsx` -- Remove Login/Register/Cart links
+   - Gorent CSS
 
-5. `src/apps/public/components/elements/MainManuList.tsx` -- Simplify nav for single-page MVP
+   - Gorent font declarations
 
-### Documentation Updates
+   - Gorent layout structure
 
-- `Phase-10-Frontend-Parity-Import-Plan.md` -- Record correction results
+   - Gorent section order
 
-- `Tasks.md` -- Mark parity corrections completed
+3. After lazy loading implementation, a FULL CSS isolation verification must be executed:
 
-- `architecture.md` -- Note admin SCSS moved to AdminLayout
+   - Inspect :root variables on /
 
-- `backend.md` -- Confirm no backend changes
+   - Confirm no Play font present on public pages
 
-  
-  
-  
+   - Confirm Play font present only under /admin/*
+
+4. Remove Login and Register from public navigation if still present.
+
+   They must exist only under /admin/auth/*.
+
+5. Perform complete file presence verification:
+
+   - All template CSS files present
+
+   - All sprite images present
+
+   - All font files present
+
+   - All assets correctly referenced
+
+   - No 404s in DevTools network tab
+
+No partial acceptance allowed.
+
+All checks must PASS before Phase 10 closure.  
   
 Documentation Updates
 
-- `Phase-10-Frontend-Parity-Import-Plan.md` -- Record correction results
-- `Tasks.md` -- Mark parity corrections completed
-- `architecture.md` -- Note admin SCSS moved to AdminLayout
-- `backend.md` -- Confirm no backend changes
+- `Phase-10-Frontend-Parity-Import-Plan.md` — Record lazy-loading fix
+- `Tasks.md` — Mark font leak correction completed
+- `architecture.md` — Document admin lazy-loading strategy
+- `backend.md` — Confirm no backend changes
+
+### Checklist Impact
+
+- C1: PASS (main.tsx has no admin SCSS) 
+- C4: PASS (lazy loading prevents Play font on public pages)
+- E1: PASS (header alignment restored with correct fonts)
+- E9: PASS (Gallery order already correct in code)
+- E10: PASS (Brand Partners in correct position)
