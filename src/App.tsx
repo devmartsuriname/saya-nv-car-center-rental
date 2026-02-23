@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import PublicLayout from '@/apps/public/layouts/PublicLayout'
 import HomeOne from '@/apps/public/pages/home-one/HomeOne'
 import AppProvidersWrapper from '@/apps/admin/components/wrapper/AppProvidersWrapper'
@@ -7,24 +7,31 @@ import AppRouter from '@/apps/admin/routes/router'
 
 configureFakeBackend()
 
-function App() {
+const AppContent = () => {
+  const location = useLocation()
+  const isAdmin = location.pathname.startsWith('/admin')
+
+  if (isAdmin) {
+    return (
+      <AppProvidersWrapper>
+        <AppRouter />
+      </AppProvidersWrapper>
+    )
+  }
+
   return (
     <Routes>
-      {/* Public routes */}
       <Route path="/" element={
         <PublicLayout>
           <HomeOne />
         </PublicLayout>
       } />
-
-      {/* Admin routes */}
-      <Route path="/admin/*" element={
-        <AppProvidersWrapper>
-          <AppRouter />
-        </AppProvidersWrapper>
-      } />
     </Routes>
   )
+}
+
+function App() {
+  return <AppContent />
 }
 
 export default App

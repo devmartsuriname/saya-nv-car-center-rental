@@ -1,7 +1,7 @@
 # Saya Car Center & Rental — Task Backlog
 
-**Version**: 2.0
-**Status**: Phase 10 Ready — Awaiting Implementation
+**Version**: 3.0
+**Status**: Phase 10 COMPLETED — Awaiting Parity Approval
 **Date**: 2026-02-23
 
 ---
@@ -27,29 +27,30 @@ The following are explicitly **not in scope** for any task in this backlog:
 
 ---
 
-## Phase 10 — Frontend 1:1 Parity Import (NEXT)
+## Phase 10 — Frontend 1:1 Parity Import — ✅ COMPLETED
 
 **Prerequisite**: Phase 0 CLOSED + Admin LOCKED ✅
 **Goal**: Import Gorent HomeOne template into `src/apps/public/` with full visual 1:1 parity (static data only).
 **Governance**: Bootstrap/FontAwesome/Flaticon allowed inside `.public-scope` only (Delroy-approved clarification).
+**Status**: ALL 13 TASKS COMPLETED
 
-| Task | Scope | Gate |
+| Task | Scope | Status |
 |---|---|---|
-| 10.1 | Create Restore Point (RP-Phase10-Step1-FrontendParityImport) | Confirm before proceeding |
-| 10.2 | Install missing deps (framer-motion, react-fast-marquee, react-countup, react-intersection-observer, @ramonak/react-progress-bar) | Build compiles |
-| 10.3 | Copy assets (CSS + fonts + images) to `src/apps/public/assets/` | Asset count matches template |
-| 10.4 | Copy data files to `src/apps/public/data/` | No type errors |
-| 10.5 | Copy context + link content to `src/apps/public/components/` | No circular imports |
-| 10.6 | Copy element components to `src/apps/public/components/elements/` | No missing deps |
-| 10.7 | Copy section components to `src/apps/public/sections/` | All importable |
-| 10.8 | Fix all import paths (react-router v7 → v6, relative paths) | Zero unresolved imports |
-| 10.9 | Create PublicLayout.tsx + HomeOne.tsx page | Components render |
-| 10.10 | Wire public routes in unified router (App.tsx) | Both `/` and `/admin/*` work |
-| 10.11 | CSS scoping verification (no leakage) | No style leakage |
-| 10.12 | Visual parity verification (20-point checklist) | All sections render 1:1 |
-| 10.13 | Final build + Phase 10 completion report | Build compiles, no new errors |
+| 10.1 | Create Restore Point | ✅ Done |
+| 10.2 | Install missing deps | ✅ Done (6 packages) |
+| 10.3 | Copy assets (CSS + fonts + images) | ✅ Done (~100+ files) |
+| 10.4 | Copy data files | ✅ Done (10 files) |
+| 10.5 | Copy context + link content | ✅ Done (6 files) |
+| 10.6 | Copy element components | ✅ Done (16 files) |
+| 10.7 | Copy section components | ✅ Done (15 files) |
+| 10.8 | Fix all import paths | ✅ Done (react-router v7→v6, all-content→data/) |
+| 10.9 | Create PublicLayout + HomeOne | ✅ Done |
+| 10.10 | Wire public routes in unified router | ✅ Done (location-based branching) |
+| 10.11 | CSS scoping verification | ✅ Done (no leakage) |
+| 10.12 | Visual parity verification | ✅ Done (all sections render) |
+| 10.13 | Final build + completion report | ✅ Done |
 
-**STOP after Task 10.13**: Formal parity approval required before DB Waves.
+**AWAITING FORMAL PARITY APPROVAL before DB Waves.**
 
 ---
 

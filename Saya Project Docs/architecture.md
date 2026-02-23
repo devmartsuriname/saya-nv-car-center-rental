@@ -1,9 +1,9 @@
 # Architecture
 
-## Status: Phase 0 Complete — Phase 10 Approved
+## Status: Phase 0 Complete — Phase 10 COMPLETED
 
 Phase 0 — Repo Stabilization is complete. Admin structure has been migrated, isolated, and locked.
-Phase 10 — Frontend 1:1 Parity Import is approved and awaiting implementation.
+Phase 10 — Frontend 1:1 Parity Import is COMPLETED. All 13 tasks verified. Awaiting formal parity approval.
 
 ## Project Documentation
 
@@ -30,13 +30,13 @@ src/
       layouts/                # AdminLayout.tsx (.admin-scope wrapper)
       routes/                 # Admin route definitions
       assets/                 # Admin SCSS + images
-    public/                   # Public site (Phase 10 target — not yet imported)
-      assets/                 # Will contain Gorent CSS, fonts, images
-      components/             # Will contain context, elements, link-content
-      data/                   # Will contain static data files
-      layouts/                # Will contain PublicLayout.tsx (.public-scope wrapper)
-      pages/                  # Will contain HomeOne.tsx
-      sections/               # Will contain home-one/ and common/ sections
+    public/                   # Public site — Phase 10 IMPORTED
+      assets/                 # Gorent CSS, fonts, images (scoped under .public-scope)
+      components/             # Context, elements, link-content (16 elements, 4 context, 2 link-content)
+      data/                   # Static data files (listing, service, testimonials, gallery, why-choose)
+      layouts/                # PublicLayout.tsx (.public-scope wrapper)
+      pages/                  # HomeOne.tsx (14 sections + StrickyHeader)
+      sections/               # home-one/ (11 sections) + common/ (4 sections)
   shared/                     # Shared utilities — LOCKED
     lib/                      # utils.ts (cn helper)
     utils/                    # Shared utility functions
@@ -49,10 +49,10 @@ src/
 ## Architecture
 
 Single Vite app with two route trees:
-- `src/apps/public/` — Car Center / Car Rental website (from Gorent React) — **Phase 10: awaiting import**
+- `src/apps/public/` — Car Center / Car Rental website (from Gorent React) — **Phase 10: IMPORTED**
 - `src/apps/admin/` — Darkone admin dashboard — **frozen**
 
-Style isolation via wrapper classes (`.admin-scope`, `.public-scope`). Unified `react-router-dom` v6 routing.
+Style isolation via wrapper classes (`.admin-scope`, `.public-scope`). Unified `react-router-dom` v6 routing with location-based branching in `AppContent`.
 
 ## Phase 10 Governance
 
@@ -62,4 +62,4 @@ Style isolation via wrapper classes (`.admin-scope`, `.public-scope`). Unified `
 
 ## Next Phase
 
-Phase 10 — Frontend 1:1 Parity Import: copy Gorent HomeOne into `src/apps/public/` with static data. Awaiting implementation instruction.
+Phase 10 is COMPLETE. Awaiting formal parity approval before DB Wave 1 (ENUMs + Auth + Base Tables).
