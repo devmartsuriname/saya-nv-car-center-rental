@@ -399,14 +399,15 @@ Note: All Gorent `react-router` v7 imports will be changed to `react-router-dom`
 - [ ] Mobile nav — NOT YET TESTED (deferred)
 - [x] Scroll to top works
 
-### CSS Isolation Verification (Task 10.11) — COMPLETED + CORRECTED
+### CSS Isolation Verification (Task 10.11) — COMPLETED + CORRECTED (v2: Lazy Loading)
 
 - [x] `/` renders HomeOne with Gorent styling (`.public-scope` active)
 - [x] `/admin/auth/sign-in` renders Darkone login — no Gorent leakage
 - [x] `/admin/dashboards` renders full dashboard — no Gorent leakage
 - [x] No Bootstrap/FontAwesome from public scope visible in admin
 - [x] No admin SCSS visible in public scope
-- [x] **CORRECTED**: Admin SCSS moved from `main.tsx` to `AdminLayout.tsx` — eliminates "Play" font leak
+- [x] **CORRECTED v1**: Admin SCSS moved from `main.tsx` to `AdminLayout.tsx`
+- [x] **CORRECTED v2**: Admin branch lazy-loaded via `React.lazy()` in `App.tsx` — eliminates "Play" font leak caused by Vite's eager CSS loading of static imports. New `AdminApp.tsx` wrapper isolates all admin imports behind a dynamic import boundary.
 - [x] **CORRECTED**: Duplicate CSS imports removed from `PublicLayout.tsx` — `style.css` handles all sub-imports
 - [x] **CORRECTED**: Login/Register/Cart links removed from public Header
 - [x] **CORRECTED**: MainManuList simplified for HomeOne single-page MVP (anchor links only)
@@ -435,14 +436,14 @@ Admin routes use full paths (`/admin/auth/sign-in`). Nesting under `<Route path=
 - App.tsx routing fixed with location-based branching
 
 ### Parity Corrections Applied
-- **Font leak fixed**: Admin SCSS import moved from `main.tsx` to `AdminLayout.tsx`
+- **Font leak fixed (v2)**: Admin branch lazy-loaded via `React.lazy()` in `App.tsx`. New `AdminApp.tsx` created as dynamic import boundary. This ensures admin SCSS (including "Play" font) is never loaded on public routes.
 - **CSS double-import fixed**: Removed individual CSS imports from `PublicLayout.tsx` (style.css handles all sub-imports)
 - **Public auth removed**: Login/Register/Cart links removed from Header.tsx
 - **Nav simplified**: MainManuList.tsx now uses onePageManuList anchor links for HomeOne MVP
 
-### Files Changed in Correction
-1. `src/main.tsx` — Removed admin SCSS import
-2. `src/apps/admin/layouts/AdminLayout.tsx` — Added admin SCSS import
+### Files Changed in Correction (v2 — Lazy Loading)
+1. `src/App.tsx` — Replaced static admin imports with `React.lazy(() => import('./apps/admin/AdminApp'))`
+2. `src/apps/admin/AdminApp.tsx` — New file: admin entry wrapper (configureFakeBackend + AppProvidersWrapper + AppRouter)
 3. `src/apps/public/layouts/PublicLayout.tsx` — Removed duplicate CSS imports
 4. `src/apps/public/sections/common/Header.tsx` — Removed Login/Register/Cart
 5. `src/apps/public/components/elements/MainManuList.tsx` — Simplified to anchor nav
