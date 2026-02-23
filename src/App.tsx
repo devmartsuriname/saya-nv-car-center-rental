@@ -1,7 +1,6 @@
-import AppProvidersWrapper from './components/wrapper/AppProvidersWrapper'
-import configureFakeBackend from './helpers/fake-backend'
-import AppRouter from './routes/router'
-import '@/assets/scss/style.scss'
+import AppProvidersWrapper from '@/apps/admin/components/wrapper/AppProvidersWrapper'
+import configureFakeBackend from '@/apps/admin/helpers/fake-backend'
+import AppRouter from '@/apps/admin/routes/router'
 
 configureFakeBackend()
 
