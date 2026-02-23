@@ -1,357 +1,219 @@
-# Phase 0 — Repo Stabilization Verification Report + Admin Lock + Phase 10 Preflight
+# Phase 10 — Parity Correction Plan
+
+## Issues Identified
+
+### Issue 1: Font Leak (Admin "Play" font bleeding into Public)
+
+- **Root cause**: `src/main.tsx` line 8 imports `@/apps/admin/assets/scss/style.scss` **globally**. This SCSS compiles Bootstrap with `$font-family-primary: "Play"` and sets CSS custom properties on `:root` and `body` (e.g., `--bs-body-font-family: "Play"`). Since these target `body` and `:root`, they override the Gorent CSS variables (`--gorent-font: "Roboto"`) globally.
+- **Fix**: The admin SCSS import must be moved from `main.tsx` into `AdminLayout.tsx` so it only loads when admin routes render. This scopes admin styles to the admin tree only.
+
+### Issue 2: CSS Double-Import
+
+- **Root cause**: Gorent's `style.css` (line 22-27) already contains `@import './bootstrap.min.css'`, `@import './flaticon.css'`, `@import './font-awesome-all.css'`, etc. But `PublicLayout.tsx` ALSO imports these same files individually (lines 5-10). This loads each CSS file twice.
+- **Fix**: Remove the individual CSS imports from `PublicLayout.tsx`. Only import `style.css` (which handles all sub-imports internally) and Swiper CSS.
+
+### Issue 3: Login/Register on Public Site
+
+- **Root cause**: `Header.tsx` lines 43-47 contain `<Link to="/inner/login">Login</Link>` and `<Link to="/inner/sign-up">Register</Link>`. These are template demo links with no corresponding routes.
+- **Fix**: Remove the entire `main-menu__top-login-reg-box` div from `Header.tsx`. Also remove `<Link to="/inner/cart">` cart link (no cart route exists).
+
+### Issue 4: Section Order
+
+- **Current order** in `HomeOne.tsx` matches the template source exactly:
+Header, BannerOne, SlidingTextOne, ServiceOne, AboutOne, ListingOne, QuickRequest, WhychooseOne, TestimonialOne, VideoOne, GalleryHomeOne, BrandOne, LetsTalk, Footer, StrickyHeader
+- This matches the Gorent template's `HomeOne.tsx` 1:1. No reordering needed -- the current order IS the template order.
+
+### Issue 5: Nav Menu Links to Non-Existent Pages
+
+- `MainManuList.tsx` contains full multi-page nav with links to `/inner/about`, `/inner/services`, `/index-two`, etc. -- none of which exist. These dead links need to be simplified for HomeOne-only MVP.
 
 ---
 
-## PHASE 0 VERIFICATION CHECKLIST (ALL ITEMS)
+## Execution Steps
 
-### A) Governance + Safety Gates
+### Step A: Move Admin SCSS Import (Font Leak Fix)
 
-**[PASS] A1. Restore Point exists**
+**Files changed:**
 
-- File: `Saya Project Docs/RP-Phase0-Step1-RepoStabilization.md`
-- Created: 2026-02-23
-- Created before Phase 0B code changes
+- `src/main.tsx` -- Remove line `import '@/apps/admin/assets/scss/style.scss'`
+- `src/apps/admin/layouts/AdminLayout.tsx` -- Add `import '../assets/scss/style.scss'` at top
 
-**[PASS] A2. Reporting is complete**
+This ensures admin fonts/styles only load within the admin scope, eliminating the "Play" font leak into the public site.
 
-- Implemented: NavLink.tsx import fix, Phase-11 Admin Lock update, architecture.md update, backend.md update
-- Partial: None
-- Skipped: None
-- Errors: Pre-existing apexcharts type error only (no new errors)
-- "No custom design. No styling changes. No business logic changes."
-- "Only import path + route prefix + admin wrapper class changes."
+### Step B: Fix CSS Double-Import in PublicLayout
 
-**[PASS] A3. Guardian Rules compliance**
+**File changed:** `src/apps/public/layouts/PublicLayout.tsx`
 
-- DEVMART-GUARDIAN-RULES.md v2.0 reviewed and referenced
-- Darkone Admin remains 1:1 (no custom UI, no new icons, no Bootstrap additions)
-- No scope creep beyond Phase 0B items
+- Remove individual imports of `bootstrap.min.css`, `font-awesome-all.css`, `flaticon.css`, `animate.min.css`, `custom-animate.css`, `nice-select.css`
+- Keep ONLY: `import '../assets/css/style.css'` (which internally imports all the others)
+- Keep Swiper CSS imports (these are separate)
 
----
+### Step C: Remove Public Auth Links
 
-### B) Routing: /admin Prefix + Auth
+**File changed:** `src/apps/public/sections/common/Header.tsx`
 
-**[PASS] B1. /admin prefix applied to all admin routes**
+- Remove the `main-menu__top-login-reg-box` div (Login/Register links, lines 43-47)
+- Remove the cart link div (`main-menu__cart-box`, lines 74-79) since there is no cart route
 
-- Evidence from `src/apps/admin/routes/index.tsx`:
-  - `/admin` (redirect to `/admin/dashboards`)
-  - `/admin/dashboards`
-  - `/admin/auth/sign-in`
-  - `/admin/auth/sign-up`
-  - `/admin/auth/reset-password`
-  - `/admin/auth/lock-screen`
-  - `/admin/error-pages/pages-404`
-- No unprefixed admin routes found
+### Step D: Simplify Nav for HomeOne MVP
 
-**[PASS] B2. Auth routes under /admin/auth/***
+**File changed:** `src/apps/public/components/elements/MainManuList.tsx`
 
-- All 4 auth routes confirmed under `/admin/auth/*`
-- No stray `/auth/*` routes exist
+- Replace multi-page dropdown nav with single-page anchor links matching the template's `onePageManuListOne` pattern (Home, About Us, Cars, Contact as simple links)
+- All links point to `/` or `#section-id` since only HomeOne exists
 
-**[PASS] B3. No demo "base-ui/*" routes remain**
+### Step E: Verify Build + Visual Parity
 
-- Search for `base-ui` across all `.ts`/`.tsx` files: **0 matches**
-
-**[PASS] B4. No demo pages reachable from router**
-
-- `routes/index.tsx` contains only: 2 app routes + 5 auth/error routes = 7 total production routes
-- No demo gallery, components showcase, or documentation page routes
+- Confirm build compiles (only pre-existing apexcharts error)
+- Confirm `/` renders with Roboto/Inter Tight fonts (not Play)
+- Confirm `/admin/auth/sign-in` renders with Play font (no Gorent styles)
+- Confirm no Login/Register links visible on public site
 
 ---
 
-### C) Admin Isolation: .admin-scope Wrapper
+## Technical Details
 
-**[PASS] C1. AdminLayout has .admin-scope wrapper**
+### Font Isolation Proof (After Fix)
 
-- File: `src/apps/admin/layouts/AdminLayout.tsx`, line 14
-- Code: `<div className="admin-scope wrapper">`
-- Wrapper is at the correct top-level boundary
+- Public: `style.css` sets `--gorent-font: "Roboto"` and `--gorent-font-two: "Inter Tight"` via `:root`, loaded via Google Fonts import in `style.css` line 20
+- Admin: `_variables.scss` sets `$font-family-primary: "Play"` compiled into Bootstrap SCSS, loaded only inside `AdminLayout.tsx`
+- No cross-contamination possible since each CSS bundle loads only in its respective layout component
 
-**[PASS] C2. CSS/SCSS separation maintained**
+### Files Modified (Total: 4)
 
-- Search for `admin` keyword in `src/apps/public/`: **0 matches**
-- Search for `.scss` in `src/apps/public/`: **0 matches**
-- No admin styles imported into public app
-- No public code imports from admin scope
+1. `src/main.tsx` -- Remove admin SCSS import
+2. `src/apps/admin/layouts/AdminLayout.tsx` -- Add admin SCSS import
+3. `src/apps/public/layouts/PublicLayout.tsx` -- Remove duplicate CSS imports
+4. `src/apps/public/sections/common/Header.tsx` -- Remove Login/Register/Cart links
+5. `src/apps/public/components/elements/MainManuList.tsx` -- Simplify nav for single-page MVP
 
----
+&nbsp;
 
-### D) Import Path Corrections
+# Phase 10 — Parity Correction Plan
 
-**[PASS] D1. All legacy @/lib/utils corrected**
+## Issues Identified
 
-- Search `"@/lib/utils"`: **0 matches** (fixed in NavLink.tsx)
+### Issue 1: Font Leak (Admin "Play" font bleeding into Public)
 
-**[PASS] D2. Shared hooks cross-references fixed**
+- **Root cause**: `src/main.tsx` line 8 imports `@/apps/admin/assets/scss/style.scss` **globally**. This SCSS compiles Bootstrap with `$font-family-primary: "Play"` and sets CSS custom properties on `:root` and `body` (e.g., `--bs-body-font-family: "Play"`). Since these target `body` and `:root`, they override the Gorent CSS variables `--gorent-font: "Roboto"`) globally.
 
-- No circular imports detected (build compiles)
+- **Fix**: The admin SCSS import must be moved from `main.tsx` into `AdminLayout.tsx` so it only loads when admin routes render. This scopes admin styles to the admin tree only.
 
-**[PASS] D3. Admin component imports re-based**
+### Issue 2: CSS Double-Import
 
-- Search `"@/components/"`: **0 matches**
+- **Root cause**: Gorent's `style.css` (line 22-27) already contains `@import './bootstrap.min.css'`, `@import './flaticon.css'`, `@import './font-awesome-all.css'`, etc. But `PublicLayout.tsx` ALSO imports these same files individually (lines 5-10). This loads each CSS file twice.
 
-**[PASS] D4. Admin context/helpers/assets/hooks paths fixed**
+- **Fix**: Remove the individual CSS imports from `PublicLayout.tsx`. Only import `style.css` (which handles all sub-imports internally) and Swiper CSS.
 
-- `"@/context/"`: **0 matches**
-- `"@/helpers/"`: **0 matches**
-- `"@/assets/"`: **0 matches**
-- `"@/hooks/"`: **0 matches**
+### Issue 3: Login/Register on Public Site
 
-**[PASS] D5. Types + utils imports correct**
+- **Root cause**: `Header.tsx` lines 43-47 contain `<Link to="/inner/login">Login</Link>` and `<Link to="/inner/sign-up">Register</Link>`. These are template demo links with no corresponding routes.
 
-- `"@/types/"`: **0 matches**
-- `"@/utils/"`: **0 matches**
-- `"@/layouts/"`: **0 matches**
-- `"@/routes/"`: **0 matches**
+- **Fix**: Remove the entire `main-menu__top-login-reg-box` div from `Header.tsx`. Also remove `<Link to="/inner/cart">` cart link (no cart route exists).
 
-**Zero legacy alias paths remain.**
+### Issue 4: Section Order
 
----
+- **Current order** in `HomeOne.tsx` matches the template source exactly:
 
-### E) File Structure Targets
+  Header, BannerOne, SlidingTextOne, ServiceOne, AboutOne, ListingOne, QuickRequest, WhychooseOne, TestimonialOne, VideoOne, GalleryHomeOne, BrandOne, LetsTalk, Footer, StrickyHeader
 
-**[PASS] E1. Admin lives under src/apps/admin/***
+- This matches the Gorent template's `HomeOne.tsx` 1:1. No reordering needed -- the current order IS the template order.
 
-- Directory confirmed with: app/, components/, context/, helpers/, hooks/, layouts/, routes/, assets/
+### Issue 5: Nav Menu Links to Non-Existent Pages
 
-**[PASS] E2. Shared code lives under src/shared/***
-
-- Directory confirmed with lib/utils used by shared UI components
-
-**[PASS] E3. Public placeholder structure exists but minimal**
-
-- `src/apps/public/` exists with empty scaffolding: assets/css/.gitkeep, components/.gitkeep, pages/.gitkeep, data/, layouts/, sections/
-- No Gorent template files imported yet
-- No SCSS files present
-- No admin references present
+- `MainManuList.tsx` contains full multi-page nav with links to `/inner/about`, `/inner/services`, `/index-two`, etc. -- none of which exist. These dead links need to be simplified for HomeOne-only MVP.
 
 ---
 
-### F) Demo Routes Removal: 39 Routes
+## Execution Steps
 
-**[PASS] F1. Route registry contains no demo groupings**
+### Step A: Move Admin SCSS Import (Font Leak Fix)
 
-- `routes/index.tsx` confirmed clean: only Dashboards + Auth + Error404
+**Files changed:**
 
-**[PASS] F2. No demo routes reachable**
+- `src/main.tsx` -- Remove line `import '@/apps/admin/assets/scss/style.scss'`
 
-- Verified in previous session: `/base-ui/*` paths do not render
+- `src/apps/admin/layouts/AdminLayout.tsx` -- Add `import '../assets/scss/style.scss'` at top
 
-**[PASS] F3. No demo links in admin sidebar/menu**
+This ensures admin fonts/styles only load within the admin scope, eliminating the "Play" font leak into the public site.
 
-- Menu items were updated in Phase 0B to remove all demo references
+### Step B: Fix CSS Double-Import in PublicLayout
 
-**Demo routes removed: YES. Zero remain.**
+**File changed:** `src/apps/public/layouts/PublicLayout.tsx`
 
----
+- Remove individual imports of `bootstrap.min.css`, `font-awesome-all.css`, `flaticon.css`, `animate.min.css`, `custom-animate.css`, `nice-select.css`
 
-### G) Build + Runtime Validation
+- Keep ONLY: `import '../assets/css/style.css'` (which internally imports all the others)
 
-**[PASS] G1. Build compiles**
+- Keep Swiper CSS imports (these are separate)
 
-- Only known pre-existing apexcharts type error remains
-- No new TS errors introduced by Phase 0B
+### Step C: Remove Public Auth Links
 
-**[PASS] G2. Admin routing works at /admin/***
+**File changed:** `src/apps/public/sections/common/Header.tsx`
 
-- `/admin/auth/sign-in` loads (verified in browser session)
-- `/admin/dashboards` loads after login (verified in browser session)
+- Remove the `main-menu__top-login-reg-box` div (Login/Register links, lines 43-47)
 
-**[PASS] G3. No regression in non-admin routing**
+- Remove the cart link div `main-menu__cart-box`, lines 74-79) since there is no cart route
 
-- Root route `/` renders without crash (currently blank/minimal -- expected, public not yet imported)
+### Step D: Simplify Nav for HomeOne MVP
 
----
+**File changed:** `src/apps/public/components/elements/MainManuList.tsx`
 
-### H) Out-of-Scope Confirmations
+- Replace multi-page dropdown nav with single-page anchor links matching the template's `onePageManuListOne` pattern (Home, About Us, Cars, Contact as simple links)
 
-**[PASS] H1. No Gorent frontend copied/migrated yet**
+- All links point to `/` or `#section-id` since only HomeOne exists
 
-- `src/apps/public/` contains only `.gitkeep` placeholder files
-- No large public UI pages present
+### Step E: Verify Build + Visual Parity
 
-**[PASS] H2. No database/Supabase work performed**
+- Confirm build compiles (only pre-existing apexcharts error)
 
-- No SQL executed
-- No schema changes
-- No env changes for Supabase
-- Supabase will be external later (not Lovable Cloud)
+- Confirm `/` renders with Roboto/Inter Tight fonts (not Play)
+
+- Confirm `/admin/auth/sign-in` renders with Play font (no Gorent styles)
+
+- Confirm no Login/Register links visible on public site
 
 ---
 
-## ADMIN LOCKED
+## Technical Details
 
-All 8 categories (A-H) **PASS**.
+### Font Isolation Proof (After Fix)
 
-**Admin route namespace is permanently locked under /admin.**
+- Public: `style.css` sets `--gorent-font: "Roboto"` and `--gorent-font-two: "Inter Tight"` via `:root`, loaded via Google Fonts import in `style.css` line 20
 
-**Admin and Public style scopes are structurally isolated.**
+- Admin: `_variables.scss` sets `$font-family-primary: "Play"` compiled into Bootstrap SCSS, loaded only inside `AdminLayout.tsx`
 
-No further admin structural/styling work allowed without explicit instruction from Delroy. Only critical bugfixes allowed with approval.
+- No cross-contamination possible since each CSS bundle loads only in its respective layout component
 
----
+### Files Modified (Total: 4)
 
-## PHASE 10 — PREFLIGHT COMPLIANCE REPORT
+1. `src/main.tsx` -- Remove admin SCSS import
 
-### Governance Conflict Identified
+2. `src/apps/admin/layouts/AdminLayout.tsx` -- Add admin SCSS import
 
-Guardian Rules Section 2 states: **"Strictly forbidden: Custom icons, Bootstrap additions, New UI libraries"**
+3. `src/apps/public/layouts/PublicLayout.tsx` -- Remove duplicate CSS imports
 
-However, the Gorent template natively ships with:
+4. `src/apps/public/sections/common/Header.tsx` -- Remove Login/Register/Cart links
 
-- `bootstrap.min.css` (Bootstrap 5 grid + utilities)
-- `font-awesome-all.css` (Font Awesome icons)
-- `flaticon.css` (Flaticon custom icon font)
-- `animate.min.css` (CSS animations)
-- `nice-select.css` (Select styling)
-- `custom-animate.css` (Custom keyframes)
-- `style.css` (Gorent master theme)
+5. `src/apps/public/components/elements/MainManuList.tsx` -- Simplify nav for single-page MVP
 
-### What the Gorent Template Requires for 1:1 Parity
+### Documentation Updates
 
-Every single section in the Gorent template depends on Bootstrap 5 grid classes (`container`, `row`, `col-*`, `d-flex`, `text-center`, etc.) and Font Awesome / Flaticon icon classes. These are not "additions" -- they are the template's native foundation.
+- `Phase-10-Frontend-Parity-Import-Plan.md` -- Record correction results
 
-### Option A: Allow Template-Native CSS Inside .public-scope Only (RECOMMENDED)
+- `Tasks.md` -- Mark parity corrections completed
 
-- Import `bootstrap.min.css`, `font-awesome-all.css`, `flaticon.css`, and all other Gorent CSS files **only inside** `src/apps/public/assets/css/`
-- All styles loaded **exclusively within** the `.public-scope` wrapper in `PublicLayout.tsx`
-- Zero leakage into `.admin-scope` -- admin uses its own Bootstrap via Darkone SCSS (already isolated)
-- This preserves **true 1:1 Gorent parity** as required by Guardian Rule Section 1
-- The Guardian Rule "no Bootstrap additions" is interpreted as: no adding Bootstrap to admin or globally. Using Bootstrap inside the template's own scope is not an "addition" -- it is the template itself
+- `architecture.md` -- Note admin SCSS moved to AdminLayout
 
-**Impact**: Full visual parity achieved. No style leakage. Both scopes use their own Bootstrap independently.
+- `backend.md` -- Confirm no backend changes
 
-### Option B: Prohibit All Bootstrap/Icons Entirely
-
-- Strip `bootstrap.min.css`, `font-awesome-all.css`, `flaticon.css` from the import
-- **What visibly breaks (non-exhaustive)**:
-  - All grid layouts collapse (no `row`/`col-*` support)
-  - All responsive breakpoints fail
-  - All utility classes fail (`d-flex`, `text-center`, `mb-4`, `p-3`, etc.)
-  - All Font Awesome icons disappear (social links, navigation, service cards, footer)
-  - All Flaticon icons disappear (service section custom icons)
-  - All CSS animations disappear
-  - The template becomes visually unusable
-- This **breaks** Guardian Rule Section 1 (1:1 parity)
-
-**Impact**: 1:1 parity is impossible. The template cannot function without its own CSS framework.
-
-### Recommendation
-
-Option A is the only path that satisfies **both** Guardian Rules: Section 1 (1:1 parity) and Section 2 (no additions). The template's native CSS dependencies are not "additions" -- they are the template itself, scoped exclusively under `.public-scope`.
-
-**Decision required from Delroy before Phase 10 implementation begins.**
-
----
-
-## Phase 10 Task Breakdown (Updated + Verified)
-
-The previously proposed 13-task breakdown (Tasks 10.1 through 10.13) remains valid and is documented in the approved plan. Summary:
-
-
-| Task  | Scope                                                                                                                             | Gate                          |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| 10.1  | Create Restore Point                                                                                                              | Confirm before proceeding     |
-| 10.2  | Install missing deps (framer-motion, react-fast-marquee, react-countup, react-intersection-observer, @ramonak/react-progress-bar) | Build compiles                |
-| 10.3  | Copy assets (CSS + fonts + images)                                                                                                | Asset count matches           |
-| 10.4  | Copy data files                                                                                                                   | No type errors                |
-| 10.5  | Copy context + link content                                                                                                       | No circular imports           |
-| 10.6  | Copy element components                                                                                                           | No missing deps               |
-| 10.7  | Copy section components                                                                                                           | All importable                |
-| 10.8  | Fix all import paths (including react-router v7 to v6)                                                                            | Zero unresolved imports       |
-| 10.9  | Create PublicLayout + HomePage                                                                                                    | Components render             |
-| 10.10 | Wire public routes in unified router                                                                                              | Both `/` and `/admin/*` work  |
-| 10.11 | CSS scoping verification                                                                                                          | No style leakage              |
-| 10.12 | Visual parity verification (20-point checklist)                                                                                   | All sections render 1:1       |
-| 10.13 | Final build + completion report                                                                                                   | Build compiles, no new errors |
-
-
----
-
-## Documentation Updates Required
-
-The following docs need updating during Phase 10 execution (not now):
-
-- `Saya Project Docs/Phase-10-Frontend-Parity-Import-Plan.md` -- update with final Copy Map results
-- `Saya Project Docs/Tasks.md` -- prepend Phase 10 task breakdown before DB waves
-- `Saya Project Docs/architecture.md` -- append "Phase 10 in progress" note
-- `Saya Project Docs/backend.md` -- append "No backend changes in Phase 10" note
-
----
-
-NOTE — Bootstrap & Icon Governance Clarification (Binding)
-
-Decision from Delroy:
-
-1) Bootstrap is allowed ONLY if it is the native Bootstrap version shipped with the Gorent template.
-
-   - No custom Bootstrap.
-
-   - No additional Bootstrap configuration.
-
-   - No merging with Admin styling.
-
-   - Must be loaded strictly inside .public-scope.
-
-2) FontAwesome and Flaticon are allowed ONLY if they are the original template assets.
-
-   - No additional icon libraries.
-
-   - No custom icon packs.
-
-   - No replacement with alternative systems.
-
-3) Public and Admin CSS must remain fully isolated:
-
-   - Public CSS loads only under .public-scope.
-
-   - Admin CSS loads only under .admin-scope.
-
-   - No shared global resets.
-
-   - No cross-import between apps.
-
-4) 1:1 Parity Rule overrides minimalism:
-
-   - Gorent template must be copied, not rebuilt.
-
-   - No redesign.
-
-   - No layout restructuring.
-
-   - No component recreation.
-
-   - Copy-first, verify parity, refactor later only if explicitly approved.
-
-5) If Bootstrap or template CSS causes leakage into Admin:
-
-   - STOP immediately.
-
-   - Report before proceeding.
-
-This clarification is binding and supersedes any ambiguity in previous Guardian wording.  
-Final Statements  
   
-Dependency Rule:
+  
+  
+  
+Documentation Updates
 
-Only install dependencies that are directly required by the Gorent template source code.
-
-No additional libraries are allowed.
-
-Dependency list must match actual imports in template files.
-
-Provide package.json diff before installation.
-
-**Phase 0 -- Repo Stabilization is formally closed.**
-
-**Admin structure is frozen.**
-
-**Shared utilities are frozen.**
-
-**Demo routes permanently removed.**
-
-**Awaiting instruction for Phase 10 -- Frontend Parity Import.**
-
-**Awaiting Delroy's decision on Option A vs Option B (Bootstrap/icons governance conflict) before any Phase 10 implementation begins.**
-
-**STOP.**
+- `Phase-10-Frontend-Parity-Import-Plan.md` -- Record correction results
+- `Tasks.md` -- Mark parity corrections completed
+- `architecture.md` -- Note admin SCSS moved to AdminLayout
+- `backend.md` -- Confirm no backend changes
