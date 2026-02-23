@@ -1,395 +1,213 @@
-# Phase 0 — Repo Stabilization Plan
+# Phase 0 — Final Patch + Admin Lock
 
-## Objective
+## Step 1: Fix Single Legacy Import
 
-Restructure `src/` from the current flat Darkone layout into the target structure: `src/apps/admin/`, `src/apps/public/` (placeholder), and `src/shared/`. Update all import paths, add `/admin` route prefixes, add `.admin-scope` wrapper class, and create public placeholder structure.
+**File**: `src/apps/admin/components/NavLink.tsx` (line 3)
 
-**Restore Point**: RP-Phase0-Step1-RepoStabilization
+Change:
 
-## Pre-Task Compliance Checklist
-
-- Guardian Rules referenced (DEVMART-GUARDIAN-RULES.md)
-- Execution order validated (Phase 0 is step 1)
-- Restore Point will be created before changes
-- No duplicate code will be introduced
-- No custom UI libraries added
-- Darkone 1:1 confirmed (no structural deviation)
-- Out-of-scope items untouched
-- Build currently has pre-existing apexcharts type error only
-
-## Scope
-
-- Move files only (no content changes to components)
-- Update import paths to match new locations
-- Add `/admin` prefix to all admin routes
-- Add `.admin-scope` wrapper to AdminLayout
-- Create empty placeholder folders for `src/apps/public/`
-- Create `src/shared/` with truly shared utilities
-- NO styling changes, NO new components, NO design decisions
-
-## File Movement Map
-
-### To `src/apps/admin/` (Darkone admin content)
-
-
-| Current Location                            | New Location                                           |
-| ------------------------------------------- | ------------------------------------------------------ |
-| `src/app/(admin)/`                          | `src/apps/admin/app/`                                  |
-| `src/app/(other)/`                          | `src/apps/admin/app/(other)/`                          |
-| `src/components/layout/`                    | `src/apps/admin/components/layout/`                    |
-| `src/components/wrapper/`                   | `src/apps/admin/components/wrapper/`                   |
-| `src/components/VectorMap/`                 | `src/apps/admin/components/VectorMap/`                 |
-| `src/components/from/`                      | `src/apps/admin/components/from/`                      |
-| `src/components/AnimationStar.tsx`          | `src/apps/admin/components/AnimationStar.tsx`          |
-| `src/components/ComingSoon.tsx`             | `src/apps/admin/components/ComingSoon.tsx`             |
-| `src/components/ComponentContainerCard.tsx` | `src/apps/admin/components/ComponentContainerCard.tsx` |
-| `src/components/CustomFlatpickr.tsx`        | `src/apps/admin/components/CustomFlatpickr.tsx`        |
-| `src/components/ErrorBoundary.tsx`          | `src/apps/admin/components/ErrorBoundary.tsx`          |
-| `src/components/FallbackLoading.tsx`        | `src/apps/admin/components/FallbackLoading.tsx`        |
-| `src/components/LoadingFallback.tsx`        | `src/apps/admin/components/LoadingFallback.tsx`        |
-| `src/components/NavLink.tsx`                | `src/apps/admin/components/NavLink.tsx`                |
-| `src/components/PageTitle.tsx`              | `src/apps/admin/components/PageTitle.tsx`              |
-| `src/components/Preloader.tsx`              | `src/apps/admin/components/Preloader.tsx`              |
-| `src/components/Spinner.tsx`                | `src/apps/admin/components/Spinner.tsx`                |
-| `src/components/ThemeCustomizer.tsx`        | `src/apps/admin/components/ThemeCustomizer.tsx`        |
-| `src/context/`                              | `src/apps/admin/context/`                              |
-| `src/helpers/`                              | `src/apps/admin/helpers/`                              |
-| `src/layouts/`                              | `src/apps/admin/layouts/`                              |
-| `src/routes/`                               | `src/apps/admin/routes/`                               |
-| `src/assets/scss/`                          | `src/apps/admin/assets/scss/`                          |
-| `src/assets/images/`                        | `src/apps/admin/assets/images/`                        |
-| `src/assets/data/`                          | `src/apps/admin/assets/data/`                          |
-
-
-### To `src/shared/` (truly shared, no theme styling)
-
-
-| Current Location               | New Location                          |
-| ------------------------------ | ------------------------------------- |
-| `src/components/ui/`           | `src/shared/components/ui/`           |
-| `src/lib/utils.ts`             | `src/shared/lib/utils.ts`             |
-| `src/types/`                   | `src/shared/types/`                   |
-| `src/utils/`                   | `src/shared/utils/`                   |
-| `src/hooks/use-mobile.tsx`     | `src/shared/hooks/use-mobile.tsx`     |
-| `src/hooks/use-toast.ts`       | `src/shared/hooks/use-toast.ts`       |
-| `src/hooks/useLocalStorage.ts` | `src/shared/hooks/useLocalStorage.ts` |
-| `src/hooks/useToggle.ts`       | `src/shared/hooks/useToggle.ts`       |
-| `src/hooks/useViewPort.ts`     | `src/shared/hooks/useViewPort.ts`     |
-
-
-### Admin-specific hooks (to `src/apps/admin/hooks/`)
-
-
-| Current Location               | New Location                              |
-| ------------------------------ | ----------------------------------------- |
-| `src/hooks/useFileUploader.ts` | `src/apps/admin/hooks/useFileUploader.ts` |
-| `src/hooks/useModal.ts`        | `src/apps/admin/hooks/useModal.ts`        |
-| `src/hooks/useQueryParams.ts`  | `src/apps/admin/hooks/useQueryParams.ts`  |
-
-
-### Stays at root `src/`
-
-
-| File                           | Reason                                             |
-| ------------------------------ | -------------------------------------------------- |
-| `src/main.tsx`                 | Single Vite entry point                            |
-| `src/App.tsx`                  | Top-level router mount                             |
-| `src/vite-env.d.ts`            | Vite type declarations                             |
-| `src/index.css`                | Will become minimal global reset only              |
-| `src/App.css`                  | Will be evaluated - may be removed if empty/unused |
-| `src/tailwind.config.lov.json` | Lovable config                                     |
-
-
-### Removed
-
-
-| File                     | Reason                                    |
-| ------------------------ | ----------------------------------------- |
-| `src/pages/Index.tsx`    | Lovable placeholder, not Darkone template |
-| `src/pages/NotFound.tsx` | Replaced by admin 404 at new path         |
-
-
-### Public placeholder (empty structure for Phase 10)
-
-```text
-src/apps/public/
-  components/
-  layouts/
-  pages/
-  sections/
-    home-one/
-    common/
-  assets/
-    css/
-  data/
+```
+import { cn } from "@/lib/utils";
 ```
 
-Each folder gets a `.gitkeep` file to preserve the structure.
+To:
 
-## Import Path Updates
-
-The `@/` alias remains pointing to `src/`. All 86+ files with `@/` imports will be updated:
-
-- `@/components/` becomes `@/apps/admin/components/`
-- `@/context/` becomes `@/apps/admin/context/`
-- `@/helpers/` becomes `@/apps/admin/helpers/`
-- `@/hooks/useFileUploader` becomes `@/apps/admin/hooks/useFileUploader`
-- `@/hooks/useModal` becomes `@/apps/admin/hooks/useModal`
-- `@/hooks/useQueryParams` becomes `@/apps/admin/hooks/useQueryParams`
-- `@/hooks/useLocalStorage` becomes `@/shared/hooks/useLocalStorage`
-- `@/hooks/useViewPort` becomes `@/shared/hooks/useViewPort`
-- `@/hooks/useToggle` becomes `@/shared/hooks/useToggle`
-- `@/hooks/use-mobile` becomes `@/shared/hooks/use-mobile`
-- `@/hooks/use-toast` becomes `@/shared/hooks/use-toast`
-- `@/layouts/` becomes `@/apps/admin/layouts/`
-- `@/routes/` becomes `@/apps/admin/routes/`
-- `@/assets/` becomes `@/apps/admin/assets/`
-- `@/types/` becomes `@/shared/types/`
-- `@/utils/` becomes `@/shared/utils/`
-- `@/lib/` becomes `@/shared/lib/`
-- `@/app/(admin)/` becomes `@/apps/admin/app/`
-- `@/app/(other)/` becomes `@/apps/admin/app/(other)/`
-
-## Route Prefix Changes
-
-All admin routes in `src/apps/admin/routes/index.tsx` get `/admin` prefix:
-
-
-| Current Route                 | New Route                                |
-| ----------------------------- | ---------------------------------------- |
-| `/` (redirect to /dashboards) | `/admin` (redirect to /admin/dashboards) |
-| `/dashboards`                 | `/admin/dashboards`                      |
-| `/base-ui/*`                  | `/admin/base-ui/*`                       |
-| `/forms/*`                    | `/admin/forms/*`                         |
-| `/tables/*`                   | `/admin/tables/*`                        |
-| `/icons/*`                    | `/admin/icons/*`                         |
-| `/maps/*`                     | `/admin/maps/*`                          |
-| `/apex-chart`                 | `/admin/apex-chart`                      |
-| `/pages-404-alt`              | `/admin/pages-404-alt`                   |
-| `/dark-sidenav`               | `/admin/dark-sidenav`                    |
-| `/dark-topnav`                | `/admin/dark-topnav`                     |
-| `/small-sidenav`              | `/admin/small-sidenav`                   |
-| `/hidden-sidenav`             | `/admin/hidden-sidenav`                  |
-| `/dark-mode`                  | `/admin/dark-mode`                       |
-
-
-Auth routes remain unprefixed: `/auth/sign-in`, `/auth/sign-up`, etc.
-
-## Admin Layout Scoping
-
-`AdminLayout.tsx` wrapper `<div>` gets `.admin-scope` class:
-
-```tsx
-// Before
-<div className="wrapper">
-
-// After
-<div className="admin-scope wrapper">
+```
+import { cn } from "@/shared/lib/utils";
 ```
 
-## SCSS Import Update
+No other edits in this file.
 
-`src/main.tsx` import path changes:
+---
 
-```tsx
-// Before
-import './assets/scss/style.scss'
+## Step 2: Verification Evidence (Pre-Collected)
 
-// After
-import './apps/admin/assets/scss/style.scss'
+### A) Legacy Import Scan Results
+
+
+| Pattern           | Matches Found                           |
+| ----------------- | --------------------------------------- |
+| `"@/lib/utils"`   | 1 (NavLink.tsx -- the file being fixed) |
+| `"@/components/"` | 0                                       |
+| `"@/context/"`    | 0                                       |
+| `"@/helpers/"`    | 0                                       |
+| `"@/assets/"`     | 0                                       |
+| `"@/hooks/"`      | 0                                       |
+| `"@/types/"`      | 0                                       |
+| `"@/utils/"`      | 0                                       |
+| `"@/layouts/"`    | 0                                       |
+| `"@/routes/"`     | 0                                       |
+
+
+After the fix, all patterns will be at **0 matches**.
+
+### B) Demo Route Removal
+
+- `base-ui` search across all `.ts`/`.tsx` files: **0 matches**
+- `src/apps/admin/routes/index.tsx` contains only:
+  - `/admin` (redirect to `/admin/dashboards`)
+  - `/admin/dashboards`
+  - `/admin/auth/sign-in`
+  - `/admin/auth/sign-up`
+  - `/admin/auth/reset-password`
+  - `/admin/auth/lock-screen`
+  - `/admin/error-pages/pages-404`
+- No demo route groups remain.
+
+### C) Runtime Smoke
+
+- `/admin/auth/sign-in` -- verified loading in previous session
+- `/admin/dashboards` -- verified loading after login in previous session
+
+### D) Build
+
+- Pre-existing apexcharts type error only. No new errors from Phase 0B.
+
+---
+
+## Step 3: Admin Lock -- Update Phase-11-Repo-Structure-Lock.md
+
+Append an "Admin Lock" section at the end of Phase-11-Repo-Structure-Lock.md:
+
+```markdown
+## 7. Admin Lock (Phase 0 Closure)
+
+**Date**: 2026-02-23
+**Status**: LOCKED
+
+Phase 0 Repo Stabilization is complete. The following are frozen:
+
+- Admin structure frozen under `src/apps/admin/*`
+- Shared utilities frozen under `src/shared/*`
+- Router prefix `/admin` is frozen
+- All 39 demo routes are permanently removed and must not be reintroduced
+- `.admin-scope` wrapper class applied to AdminLayout
+- No further admin structural changes until explicitly authorized
+
+Any modification to the above requires explicit approval from Delroy.
 ```
 
-Note: This SCSS currently loads globally. Full scoping under `.admin-scope` is a separate styling isolation task that will be addressed after structural move is verified. For Phase 0, the import path is corrected but the SCSS content is NOT modified (1:1 parity rule).
+---
 
-## Updated `src/App.tsx`
+## Step 4: Update Documentation
 
-The top-level App component will mount the admin router. A placeholder route for `/` (public) will render a simple "Coming Soon" static page until Phase 10 import.
+### `Saya Project Docs/architecture.md`
 
-## Updated `src/routes/router.tsx` (now at `src/apps/admin/routes/router.tsx`)
+Replace current content to reflect completed Phase 0 state:
 
-Admin routes wrapped under `/admin/*` path segment.
+- Status changes from "Planning Phase" to "Phase 0 Complete"
+- Current Structure updated to reflect `src/apps/admin/`, `src/apps/public/` (placeholder), `src/shared/`
+- Remove references to `archive/` and `docs-standard/` (deleted in Phase 1 cleanup)
 
-## Execution Steps (in order)
+### `Saya Project Docs/backend.md`
 
-1. Create Restore Point documentation: `RP-Phase0-Step1-RepoStabilization`
-2. Create `src/apps/admin/` folder structure
-3. Create `src/apps/public/` placeholder folders with `.gitkeep`
-4. Create `src/shared/` folder structure
-5. Move all admin files to `src/apps/admin/`
-6. Move shared files to `src/shared/`
-7. Update all import paths across 86+ files
-8. Add `/admin` prefix to all admin routes
-9. Add `.admin-scope` class to AdminLayout wrapper
-10. Update `src/main.tsx` SCSS import path
-11. Update `src/App.tsx` to mount admin router at `/admin/*`
-12. Remove `src/pages/Index.tsx` and `src/pages/NotFound.tsx` (Lovable placeholders)
-13. Verify build compiles
-14. Verify routing works (`/admin/dashboards`, `/auth/sign-in`)
-15. Confirm no console errors beyond pre-existing apexcharts issue
+Update current state section:
 
-## Risk Notes
+- Admin backend (fake-backend, auth context) now lives under `src/apps/admin/` (moved from flat `src/`)
+- No other backend changes
 
-- **86+ files** need import path updates — high risk of missed imports causing build failure
-- SCSS global loading remains temporarily until styling isolation phase
-- Menu sidebar links in `src/assets/data/menu-items.ts` likely contain route paths that need `/admin` prefix
-- Internal `<Link>` components and `useNavigate()` calls may reference old paths
+---
 
-## Out of Scope
+NOTE — PHASE 0 FINAL PATCH + ADMIN LOCK (MANDATORY CONFIRMATIONS)
 
-- SCSS content modification (1:1 parity)
-- Gorent template import (Phase 10)
-- Database, RLS, Supabase (locked until parity gate)
-- Shop, storefront, customer login
+The following confirmations must be added to the execution plan and included in the final report before Phase 0 is considered formally closed:
 
-## Note this:  
-NOTE — Phase 0 (Repo Stabilization) Plan Review + Required Adjustments
+1) POST-FIX LEGACY IMPORT SCAN (ZERO TOLERANCE)
 
-Status:
+After fixing the remaining legacy import in:
 
-- Phase 0 plan is broadly aligned with our target architecture:
+src/apps/admin/components/NavLink.tsx
 
-  - Single Vite app
+You must re-run a full repository scan and confirm ZERO matches for the following patterns:
 
-  - Public site at "/" (placeholder for now)
+- "@/lib/utils"
 
-  - Admin under "/admin" as route segment
+- "@/components/"
 
-  - Documentation-first + Restore Point + strict governance
+- "@/context/"
 
-  - No database / Supabase / RLS implementation until AFTER Public 1:1 import (Phase 10)
+- "@/helpers/"
 
-Required Notes / Corrections to apply to the Phase 0 execution plan BEFORE implementation:
+- "@/assets/"
 
-1) Do NOT start “Admin feature work”
+- "@/hooks/"
 
-   - Phase 0 is FILE MOVES + IMPORT PATH UPDATES + ROUTE PREFIXING only.
+- "@/types/"
 
-   - No UI redesign, no new components, no module changes, no schema work, no Supabase, no CRUD implementation.
+- "@/utils/"
 
-2) Route Prefix Coverage MUST include ALL hardcoded paths
+- "@/layouts/"
 
-   - In addition to routes/index.tsx, you MUST scan and update:
+- "@/routes/"
 
-     - src/assets/data/menu-items.ts (and any similar menu config)
+The report must include:
 
-     - any <Link to="...">, navigate("..."), redirects, sidebar links, breadcrumb links
+- Search results count (0 required for each pattern)
 
-   - Goal: zero remaining admin paths that still point to old "/" routes.
+- Explicit statement: “Zero legacy alias paths remain.”
 
-3) Admin Auth path MUST be decided to avoid future collision with public
+If any match remains → STOP and report immediately.
 
-   - Current plan keeps auth routes unprefixed: /auth/sign-in, /auth/sign-up, etc.
+------------------------------------------------------------
 
-   - Governance recommendation (safer): move admin auth under /admin/auth/*
+2) ADMIN ROUTE LOCK CONFIRMATION
 
-     - Reason: public lives at "/" and will expand; /auth/* can collide later.
+In [Phase-11-Repo-Structure-Lock.md](http://Phase-11-Repo-Structure-Lock.md), explicitly document:
 
-   - If we keep /auth/* unprefixed, document this as an explicit locked decision + rationale.
+- Only "/admin/*" routes are allowed for Admin.
 
-4) CSS/SCSS Isolation Gate (critical for “no leakage” requirement)
+- Auth routes must remain under "/admin/auth/*".
 
-   - Phase 0 may update SCSS import paths, BUT:
+- No demo routes (including base-ui, showcase, example, or gallery routes) may be reintroduced under any circumstance.
 
-     - Do NOT import any Gorent/public CSS globally until isolation is enforced.
+- routes/index.tsx must contain only production Admin routes.
 
-     - Treat global SCSS import in main.tsx as TEMPORARY and flagged as “Isolation Debt”.
+Explicit statement required in report:
 
-   - When Phase 10 begins, public CSS must be loaded in a way that prevents cross-app leakage.
+“Admin route namespace is permanently locked under /admin.”
 
-   - Document the isolation plan explicitly (single build + strict separation).
+------------------------------------------------------------
 
-5) Public placeholder must remain minimal and non-invasive
+3) CSS / SCSS ISOLATION CONFIRMATION (NO LEAKAGE)
 
-   - Only a simple placeholder page at "/" until Phase 10 import.
+In the Admin Lock documentation, explicitly confirm:
 
-   - No attempt to “mock” public design in Phase 0.
+- Admin styling remains scoped to Admin only.
 
-6) Restore Point is mandatory
+- Public frontend must not inherit Admin SCSS.
 
-   - Create the Restore Point BEFORE any file moves.
+- No global admin overrides exist outside admin scope.
 
-   - If build breaks beyond the pre-existing apexcharts type issue, STOP immediately and report.
+- Single build architecture does not allow style leakage between public and admin layers.
 
-7) No deletions beyond explicitly listed placeholders
+Explicit statement required:
 
-   - Only remove the Lovable placeholders listed (Index.tsx, NotFound.tsx) if confirmed unused.
+“Admin and Public style scopes are structurally isolated.”
 
-   - No other cleanup, refactors, or “while I’m here” improvements.
+------------------------------------------------------------
 
-Execution Order Lock:
+4) FINAL PHASE 0 CLOSE STATEMENT (REQUIRED)
 
-- Phase 0 Repo Stabilization (this plan) must complete and be verified stable.
+The final report must conclude with:
 
-- NEXT: Phase 10 Frontend Parity Import (Gorent 1:1 into public app structure).
+“Phase 0 — Repo Stabilization is formally closed.
 
-- Database implementation (Phase 8 execution / SQL) remains LOCKED until after Phase 10 is completed and verified.
+Admin structure is frozen.
 
-NOTE — Darkone Demo Route Cleanup (Phase 0 Scope Control)
+Shared utilities are frozen.
 
-Context:
+Demo routes permanently removed.
 
-The current Darkone template contains multiple demo routes (e.g. /base-ui/*, component showcases, charts, widgets, sample pages).
+Awaiting instruction for Phase 10 — Frontend Parity Import.”
 
-Governance Decision:
+Do not proceed to Phase 10 until this confirmation is delivered.
 
-All demo-only routes must be removed from the production route configuration during Phase 0.
+## Reporting Format
 
-Scope Clarification:
+- **Implemented**: NavLink.tsx import fix, Phase-11 Admin Lock update, architecture.md update, backend.md update
+- **Partial**: None
+- **Skipped**: None
+- **Errors**: Pre-existing apexcharts type error (not addressed, out of scope)
+- **Verification Evidence**: All 10 legacy import patterns at 0 matches post-fix; demo routes at 0; routes confirmed clean
 
-- Only routes required for:
-
-  - Admin Dashboard
-
-  - Future project modules (Vehicles, Frontend Modules, CRM, Blog, Site Settings)
-
-  - Authentication (sign-in, sign-up, reset password)
-
-- All demo showcase routes are OUT OF SCOPE.
-
-Explicit Instruction:
-
-- Remove all demo component routes from:
-
-  - routes/index.tsx
-
-  - any route configuration files
-
-  - sidebar/menu configuration (e.g. menu-items.ts)
-
-- These routes must NOT be migrated, preserved, or refactored.
-
-- They must NOT be included in parity checks.
-
-- They must NOT be reintroduced later.
-
-Reference:
-
-DARKONE_ASSET_[MAP.md](http://MAP.md) is the only allowed source for valid admin module structure.
-
-Important:
-
-There are approximately 30–40 demo routes that must be excluded.
-
-Lovable must not assume they are needed.
-
-Lovable must not “keep them for safety”.
-
-Reporting Requirement:
-
-After cleanup, Lovable must report:
-
-- Total routes removed
-
-- Remaining active admin routes
-
-- Confirmation that no demo routes remain accessible
-
-Hard Rule:
-
-Demo routes are not part of the project architecture and must not survive Phase 0.
-
-STOP after cleanup and await further instruction.  
-  
-Known Issues
-
-- apexcharts type error: pre-existing, unrelated, not addressed
+After completion: **STOP. Awaiting instruction for Phase 10 (Frontend Parity Import).**
