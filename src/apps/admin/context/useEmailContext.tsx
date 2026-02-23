@@ -1,8 +1,8 @@
 import { createContext, useContext, useState } from 'react'
 
-import type { ChildrenType } from '@/types/component-props'
-import type { EmailContextType, EmailOffcanvasStatesType, OffcanvasControlType } from '@/types/context'
-import type { EmailLabelType, EmailType } from '@/types/data'
+import type { ChildrenType } from '@/shared/types/component-props'
+import type { EmailContextType, EmailOffcanvasStatesType, OffcanvasControlType } from '@/shared/types/context'
+import type { EmailLabelType, EmailType } from '@/shared/types/data'
 
 const EmailContext = createContext<EmailContextType | undefined>(undefined)
 

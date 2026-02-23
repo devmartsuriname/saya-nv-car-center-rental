@@ -1,6 +1,6 @@
 import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
 import { findAllParent, findMenuItem, getMenuItemFromURL } from '@/apps/admin/helpers/Manu'
-import { MenuItemType, SubMenus } from '@/types/menu'
+import { MenuItemType, SubMenus } from '@/shared/types/menu'
 import clsx from 'clsx'
 import { Fragment, MouseEvent, useCallback, useEffect, useState } from 'react'
 import { Collapse } from 'react-bootstrap'

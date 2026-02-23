@@ -2,7 +2,7 @@ import { Card, Col, FormLabel, FormText, Row } from 'react-bootstrap'
 import Dropzone from 'react-dropzone'
 
 import useFileUploader from '@/apps/admin/hooks/useFileUploader'
-import { DropzoneFormInputProps } from '@/types/component-props'
+import { DropzoneFormInputProps } from '@/shared/types/component-props'
 import IconifyIcon from '../wrapper/IconifyIcon'
 import { Link } from 'react-router-dom'
 

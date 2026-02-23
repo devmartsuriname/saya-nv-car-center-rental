@@ -14,8 +14,8 @@ import {
   PricingType,
   ProjectType,
   // TimelineType,
-} from '@/types/data'
-import { sleep } from '@/utils/promise'
+} from '@/shared/types/data'
+import { sleep } from '@/shared/utils/promise'
 import * as yup from 'yup'
 
 export const getNotifications = async (): Promise<NotificationType[]> => {

@@ -2,7 +2,7 @@ import { FormControl, FormGroup, FormLabel, type FormControlProps } from 'react-
 import Feedback from 'react-bootstrap/esm/Feedback'
 import { Controller, type FieldPath, type FieldValues, type PathValue } from 'react-hook-form'
 
-import type { FormInputProps } from '@/types/component-props'
+import type { FormInputProps } from '@/shared/types/component-props'
 
 type TextAreaFormInputProps = { rows?: number }
 

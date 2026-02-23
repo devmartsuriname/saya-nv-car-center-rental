@@ -26,10 +26,10 @@ const SignIn = () => {
                 <CardBody className="p-5">
                   <div className="text-center">
                     <div className="mx-auto mb-4 text-center auth-logo">
-                      <Link to="/dashboards" className="logo-dark">
+                      <Link to="/admin/dashboards" className="logo-dark">
                         <img src={DarkLogo} height={32} alt="logo dark" />
                       </Link>
-                      <Link to="/dashboards" className="logo-light">
+                      <Link to="/admin/dashboards" className="logo-light">
                         <img src={LightLogo} height={28} alt="logo light" />
                       </Link>
                     </div>
@@ -41,7 +41,7 @@ const SignIn = () => {
                       <TextFormInput control={control} name="email" placeholder="Enter your email" className="form-control" label="Email Address" />
                     </div>
                     <div className="mb-3">
-                      <Link to="/auth/reset-password" className="float-end text-muted  ms-1">
+                      <Link to="/admin/auth/reset-password" className="float-end text-muted  ms-1">
                         Forgot password?
                       </Link>
                       <TextFormInput control={control} name="password" placeholder="Enter your password" className="form-control" label="Password" />
@@ -63,7 +63,7 @@ const SignIn = () => {
               </Card>
               <p className="text-center mt-4 text-white text-opacity-50">
                 Don&apos;t have an account?
-                <Link to="/auth/sign-up" className="text-decoration-none text-white fw-bold">
+                <Link to="/admin/auth/sign-up" className="text-decoration-none text-white fw-bold">
                   Sign Up
                 </Link>
               </p>

@@ -1,5 +1,5 @@
-import { EmailType, GroupType } from '@/types/data'
-import { addOrSubtractDaysFromDate } from '@/utils/date'
+import { EmailType, GroupType } from '@/shared/types/data'
+import { addOrSubtractDaysFromDate } from '@/shared/utils/date'
 
 export const socialGroupsData: GroupType[] = [
   {

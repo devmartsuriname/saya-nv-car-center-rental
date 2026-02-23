@@ -1,7 +1,7 @@
 import { notificationsData } from '@/apps/admin/assets/data/topbar'
 import IconifyIcon from '@/apps/admin/components/wrapper/IconifyIcon'
 import SimplebarReactClient from '@/apps/admin/components/wrapper/SimplebarReactClient'
-import { NotificationType } from '@/types/data'
+import { NotificationType } from '@/shared/types/data'
 import { Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 

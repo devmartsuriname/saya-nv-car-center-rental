@@ -26,10 +26,10 @@ const Error404 = () => {
                       <div className="p-4">
                         <div className="mx-auto mb-4 text-center">
                           <div className="mx-auto text-center auth-logo">
-                            <Link to="/dashboards" className="logo-dark">
+                            <Link to="/admin/dashboards" className="logo-dark">
                               <img src={logoDark} height={32} alt="logo dark" />
                             </Link>
-                            <Link to="/dashboards" className="logo-light">
+                            <Link to="/admin/dashboards" className="logo-light">
                               <img src={logoLight} height={28} alt="logo light" />
                             </Link>
                           </div>
@@ -39,7 +39,7 @@ const Error404 = () => {
                             The page you&apos;re trying to reach seems to have gone <br /> missing in the digital wilderness.
                           </p>
                           <div className="text-center">
-                            <Link to="/dashboards" className="btn btn-danger">
+                            <Link to="/admin/dashboards" className="btn btn-danger">
                               Back to Home
                             </Link>
                           </div>

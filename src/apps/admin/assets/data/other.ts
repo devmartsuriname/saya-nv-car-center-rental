@@ -15,7 +15,7 @@ import {
   PricingType,
   ProjectType,
   // TimelineType,
-} from '@/types/data'
+} from '@/shared/types/data'
 
 // export const timelineData: TimelineType = {
 //   Today: [
