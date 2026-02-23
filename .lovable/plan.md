@@ -1,190 +1,351 @@
-# Phase 9 — Tasks + Implementation Blueprint (Documentation Only)
+# Create DEVMART-GUARDIAN-RULES.md — Governance Document
 
 ## Objective
 
-Create four documentation files that convert Phases 5-8 into actionable implementation guidance, define the repo structure lock, and plan the frontend parity import. No code, routing, dependency, schema, RLS, or styling changes.
+Create `Saya Project Docs/DEVMART-GUARDIAN-RULES.md` as the supreme governance authority for this repository. Documentation only — no code changes.
 
-## Deliverables
+## Deliverable
 
-### A) `Saya Project Docs/Tasks.md`
+**File**: `Saya Project Docs/DEVMART-GUARDIAN-RULES.md`
 
-Actionable backlog converting Phases 5-8 into grouped tasks:
+Contains the following sections:
 
-- **DB Wave 1** (Foundation): ENUMs, user_roles, has_role(), media_assets
-- **DB Wave 2** (Vehicles): vehicles, vehicle_rental_details, vehicle_sale_details, vehicle_media
-- **DB Wave 3** (Blog): blog_categories, blog_tags, blog_posts, blog_post_tags, blog_post_media
-- **DB Wave 4** (Frontend): hero_slides, services, about_content, about_progress_items, why_choose_items, testimonials, gallery_items, brand_partners, cta_banners
-- **DB Wave 5** (CRM/Settings): quick_requests, site_settings
-- **Storage**: 3 buckets (vehicles, blog, frontend) + policies
-- **RLS**: Enable per table, super_admin base, role-based, public SELECT
-- **Seed Data**: Minimal test records per table per role
-- **Admin CRUD Wiring**: Per-module Darkone admin pages/modals
-- **Public Site Dynamic Reads**: Replace static data with Supabase queries
-- **QA**: Acceptance testing matrix per role
+1. **Title**: DEVMART GUARDIAN RULES — NON-NEGOTIABLE EXECUTION PROTOCOL
+2. **All 12 Guardian Rules** — copied exactly as provided:
+  - Template Parity 1:1 Lock
+  - No Custom Design Elements
+  - Darkone Asset Map Mandatory
+  - Reporting Mandatory
+  - No Self-Directed Design Decisions
+  - Duplication Check Before Implementation
+  - Restore Point Protocol
+  - Execution Order Lock
+  - Single Build + Strict Isolation
+  - External Supabase Only
+  - Build Safety Rule
+  - No Scope Creep
+  - Final Rule (STOP/ASK/WAIT)
+3. **Governance Enforcement Mechanism** — pre-task gates (Guardian Rules reference, Restore Point, compliance confirmation), deviation = violation definitions
+4. **Violation Protocol** — STOP, report, revert to Restore Point, await instructions
+5. **Mandatory Pre-Task Compliance Checklist** — 8-item checklist (Restore Point, duplication check, no custom UI, Darkone 1:1, Gorent 1:1, execution order, out-of-scope, build safety)
+6. **Governance Enforcement Patch** — execution order hard lock, restore point requirement, conflict resolution (Guardian Rules override)
 
-Each task includes: objective, input references, output, acceptance checks, STOP note.
+DEVMART GUARDIAN RULES v2.0
 
-Out of scope items explicitly marked: shop/storefront, frontend login/registration, commerce features.
+NON-NEGOTIABLE EXECUTION PROTOCOL
 
----
+(Supreme Governance Authority)
 
-### B) `Saya Project Docs/Phase-9-Implementation-Blueprint.md`
+0. SUPREME AUTHORITY CLAUSE
 
-Step-by-step execution blueprint (no execution now):
+This document is the highest governance authority for this repository.
 
-1. **Supabase project setup**: External Supabase (NOT Lovable Cloud DB), connection via environment variables
-2. **SQL migration wave order**: Reference Phase 8 Waves 1-5 (migrations 001-005)
-3. **Storage buckets + policy order**: Migration 006 (buckets) then storage RLS
-4. **RLS enablement order**: Migration 007 (enable), 008 (super_admin), 009 (role-based), 010 (public SELECT)
-5. **Minimal seed dataset**: 1-2 records per table for each role scenario
-6. **Rollback checkpoint naming**: RP-Phase9-Wave-N convention
-7. **Go/No-Go checklist**: Prerequisites before any code changes
+If any conflict exists between this document and:
 
-Re-asserted constraints:
+- Phase documents
 
-- Single Vite app, /admin is route-based
-- Strict CSS/SCSS isolation mandatory
-- External Supabase later (not Lovable Cloud DB)
-- Deployment target: Hostinger VPS + sayanv.com (future)
-- Known issue: apexcharts type error (pre-existing, unrelated)
+- [Tasks.md](http://Tasks.md)
 
----
+- Implementation Blueprints
 
-### C) `Saya Project Docs/Phase-10-Frontend-Parity-Import-Plan.md`
+- Any other file
 
-Planning for importing Gorent Home 1 into the public site route tree:
+This document overrides. No exception.
 
-- **KEEP vs REMOVE**: Based on Phase 1 freeze (14 sections + StrickyHeader confirmed)
-- **Section-to-Component mapping** with data source designation:
-  - Header -> static now, future site_settings
-  - BannerOne -> static now, future hero_slides
-  - SlidingTextOne -> static (no DB table)
-  - ServiceOne -> static now, future services
-  - AboutOne -> static now, future about_content + about_progress_items
-  - ListingOne -> static now, future vehicles
-  - QuickRequest -> static now, future quick_requests (write) + vehicles (read)
-  - WhychooseOne -> static now, future why_choose_items
-  - TestimonialOne -> static now, future testimonials
-  - VideoOne -> static now, future site_settings or cta_banners
-  - GalleryHomeOne -> static now, future gallery_items (limit 6)
-  - BrandOne -> static now, future brand_partners
-  - LetsTalk -> static now, future cta_banners
-  - Footer -> static now, future site_settings
-  - StrickyHeader -> static now, future site_settings
-- **Asset placement rules**: All images/static files in /public; all React/TS code in /src
-- **Import strategy**: Components from `gorent-car-rental-react-js-template/src/` imported into `/src/apps/public/`
+---------------------------------------------------------------------
 
----
+1. TEMPLATE PARITY — 1:1 LOCK (HARD RULE)
 
-### D) `Saya Project Docs/Phase-11-Repo-Structure-Lock.md`
+- Darkone Admin must remain 1:1.
 
-Final folder boundaries for single Vite app:
+- Gorent Frontend must remain 1:1.
 
-```text
-src/
-  apps/
-    public/          # Public site (/)
-      components/
-      layouts/
-      pages/
-      sections/
-      assets/
-        css/         # Gorent CSS scoped under .public-scope
-    admin/           # Darkone admin (/admin/*)
-      app/
-      components/
-      context/
-      helpers/
-      hooks/
-      layouts/
-      pages/
-      routes/
-      assets/
-        scss/        # Darkone SCSS scoped under .admin-scope
-  shared/            # Only truly shared utilities (no theme styling)
-    utils/
-    types/
-    hooks/
-```
+- No structural deviation.
 
-- **Routing boundary**: Public router handles `/`; Admin router handles `/admin/*`
-- **Styling isolation**:
-  - Admin styles scoped under `.admin-scope` root class
-  - Public styles scoped under `.public-scope` root class
-  - No cross-imports of theme SCSS/CSS between public and admin
-  - Allowed globally: CSS reset, font loading only
-- **Re-asserted constraints**: Single Vite app, external Supabase, Hostinger VPS + sayanv.com (future)
+- No UI improvisation.
 
-EXECUTION ORDER OVERRIDE — CRITICAL
+- No layout refactoring.
 
-Before any database implementation begins, the following sequence is locked:
+- No component redesign.
+
+Any deviation = Governance Violation.
+
+---------------------------------------------------------------------
+
+2. ABSOLUTE DESIGN PROHIBITION
+
+Strictly forbidden:
+
+- Custom icons
+
+- Bootstrap additions
+
+- New UI libraries
+
+- Design “improvements”
+
+- Personal UX decisions
+
+- Layout “optimizations”
+
+Lovable is an executor — not a designer.
+
+---------------------------------------------------------------------
+
+3. DARKONE ASSET MAP MANDATORY
+
+For Admin:
+
+- DARKONE_ASSET_MAP must be referenced before module creation.
+
+- No new structure outside mapped structure.
+
+- No renamed assets.
+
+- No class restructuring.
+
+---------------------------------------------------------------------
+
+4. EXECUTION ORDER LOCK (HARD GATE)
+
+Mandatory sequence:
 
 1) Phase 0 — Repo Stabilization
 
-   - Finalize folder structure as defined in [Phase-11-Repo-Structure-Lock.md](http://Phase-11-Repo-Structure-Lock.md)
+2) Phase 10 — Frontend 1:1 Static Parity
 
-   - Enforce route-based architecture:
+3) Parity Verification Gate — Formal Approval Required
 
-     Public at "/"
+4) Database Waves
 
-     Admin at "/admin/*"
+5) Admin Wiring
 
-   - Verify strict styling isolation (.public-scope vs .admin-scope)
+6) Public Dynamic Integration
 
-   - Confirm single Vite build integrity (no CSS leakage, no routing conflicts)
+Until parity is approved:
 
-2) Phase 10 — Frontend 1:1 Parity Import (PUBLIC ONLY)
+NO SQL
 
-   - Import Gorent Home 1 template into /src/apps/public/
+NO migrations
 
-   - Achieve full visual 1:1 parity
+NO RLS
 
-   - All sections static (no Supabase queries)
+NO storage buckets
 
-   - No database integration
+NO Supabase integration
 
-   - No RLS
+NO dynamic queries
 
-   - No storage buckets
+---------------------------------------------------------------------
 
-   - No migrations
+5. RESTORE POINT PROTOCOL (MANDATORY)
 
-3) Parity Verification Gate
+Before ANY of the following:
 
-   - Pixel-level visual comparison completed
+- Folder restructuring
 
-   - Routing verified
+- Dependency installation
 
-   - CSS isolation verified
+- Routing modification
 
-   - Build passes without errors
+- Styling changes
 
-Only AFTER this gate is formally approved:
+- Schema work
 
-4) Phase 8 Execution — Database Implementation Waves 1–5
+- RLS work
 
-   - Then follow [Tasks.md](http://Tasks.md) strictly in order.
+- Refactoring
 
-Hard Rule:
+A Restore Point must be created.
 
-No SQL.
+Naming Convention:
 
-No migrations.
+RP-PhaseX-StepY-Timestamp
 
-No RLS.
+Each Restore Point must be:
 
-No Supabase integration.
+- Confirmed in task report
 
-No storage buckets.
+- Logged in appropriate phase log
 
-Until frontend parity is complete and explicitly approved.  
+- Referenced before implementation begins
+
+No Restore Point → No Execution.
+
+---------------------------------------------------------------------
+
+6. DUPLICATION CONTROL RULE
+
+Before implementing any feature:
+
+- Search for existing code
+
+- Confirm no duplicate logic
+
+- Confirm no redundant imports
+
+- Confirm no duplicate routes
+
+Duplicate code is forbidden.
+
+---------------------------------------------------------------------
+
+7. SINGLE BUILD + STRICT ISOLATION
+
+Deployment target:
+
+- Single Vite build
+
+- Public at /
+
+- Admin at /admin
+
+- Shared repo, isolated styling
+
+CSS/SCSS isolation mandatory:
+
+- No leakage between admin and public
+
+- No shared styling assumptions
+
+- No global override contamination
+
+---------------------------------------------------------------------
+
+8. EXTERNAL SUPABASE ONLY
+
+- No Lovable Cloud DB
+
+- Supabase external only
+
+- No hidden DB coupling
+
+- No local mock DB after integration phase
+
+---------------------------------------------------------------------
+
+9. BUILD INTEGRITY RULE (HARD STOP)
+
+If:
+
+- Build fails
+
+- Runtime errors appear
+
+- Console errors increase
+
+- Routing breaks
+
+- Layout shifts unexpectedly
+
+STOP immediately.
+
+Do not continue.
+
+Report issue.
+
+Await instruction.
+
+---------------------------------------------------------------------
+
+10. REPORTING MANDATORY (NO EXCEPTIONS)
+
+After every task, Lovable must report:
+
+- What was implemented
+
+- What was partially implemented
+
+- What was skipped
+
+- What errors occurred
+
+- Restore Point reference
+
+- Scope confirmation
+
+Missing report = governance breach.
+
+---------------------------------------------------------------------
+
+11. VIOLATION PROTOCOL
+
+If a rule is violated:
+
+1) STOP immediately
+
+2) Report deviation
+
+3) Revert to last Restore Point
+
+4) Await further instructions
+
+No silent fixes.
+
+No hidden adjustments.
+
+---------------------------------------------------------------------
+
+12. MANDATORY PRE-TASK COMPLIANCE CHECKLIST
+
+Before starting ANY task, Lovable must confirm:
+
+[ ] Guardian Rules referenced
+
+[ ] Execution order validated
+
+[ ] Restore Point created
+
+[ ] No duplicate code detected
+
+[ ] No custom UI libraries added
+
+[ ] Darkone 1:1 confirmed (if admin)
+
+[ ] Gorent 1:1 confirmed (if frontend)
+
+[ ] Build currently stable
+
+[ ] Out-of-scope untouched
+
+No checklist confirmation → No execution.
+
+---------------------------------------------------------------------
+
+13. SCOPE CREEP ZERO TOLERANCE
+
+No:
+
+- Improvements outside instruction
+
+- Refactoring without permission
+
+- Enhancements beyond spec
+
+- “Best practice” substitutions
+
+- Autonomous optimizations
+
+If uncertain → ASK.
+
+---------------------------------------------------------------------
+
+14. FINAL RULE — STOP / ASK / WAIT
+
+If any uncertainty exists:
+
+STOP.
+
+ASK.
+
+WAIT.
+
+Never assume.
+
+END OF DOCUMENT  
   
 Technical Details
 
-- 4 files created under `Saya Project Docs/`
-- No code modifications
-- No dependencies added
-- No database, schema, RLS, or backend work
-- No routing, styling, or build changes
-- Known issue documented: apexcharts type error (pre-existing, unrelated)
-- Stop after documentation, await further instructions
+- 1 file created
+- No code, routing, styling, dependency, schema, or RLS changes
+- Stop after creation, await further instructions
