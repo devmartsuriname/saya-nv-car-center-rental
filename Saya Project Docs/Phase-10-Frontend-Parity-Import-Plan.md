@@ -1,14 +1,39 @@
 # Phase 10 — Frontend Parity Import Plan
 
-**Version**: 1.0
-**Status**: Planning Only — No Execution
-**Date**: 2026-02-22
+**Version**: 2.0
+**Status**: Approved — Awaiting Implementation
+**Date**: 2026-02-23
+**Phase 0 Status**: CLOSED + ADMIN LOCKED
 
 ---
 
 ## 0. Purpose
 
 Define the plan for importing Gorent Home 1 template into the public site route tree, achieving full visual 1:1 parity. All sections will use static data — no Supabase integration in this phase.
+
+---
+
+## 0.1 Governance Clarification (Binding — Approved by Delroy)
+
+1. **Bootstrap** is allowed ONLY if it is the native Bootstrap version shipped with the Gorent template.
+   - No custom Bootstrap. No additional Bootstrap configuration. No merging with Admin styling.
+   - Must be loaded strictly inside `.public-scope`.
+
+2. **FontAwesome and Flaticon** are allowed ONLY if they are the original template assets.
+   - No additional icon libraries. No custom icon packs. No replacement with alternative systems.
+
+3. **Public and Admin CSS must remain fully isolated**:
+   - Public CSS loads only under `.public-scope`.
+   - Admin CSS loads only under `.admin-scope`.
+   - No shared global resets. No cross-import between apps.
+
+4. **1:1 Parity Rule overrides minimalism**:
+   - Gorent template must be copied, not rebuilt. No redesign. No layout restructuring. No component recreation.
+   - Copy-first, verify parity, refactor later only if explicitly approved.
+
+5. **If Bootstrap or template CSS causes leakage into Admin**: STOP immediately. Report before proceeding.
+
+6. **Dependency Rule**: Only install dependencies that are directly required by the Gorent template source code. No additional libraries allowed. Dependency list must match actual imports in template files.
 
 ---
 
@@ -74,12 +99,8 @@ Define the plan for importing Gorent Home 1 template into the public site route 
 
 ### Images / Static Files
 
-- **Location**: `/public/` directory only
-- **Structure**: Preserve Gorent's relative image paths where possible
-- **Examples**:
-  - `/public/images/cars/...`
-  - `/public/images/about/...`
-  - `/public/images/hero/...`
+- **Location**: `src/apps/public/assets/images/` (ES6 importable)
+- **Structure**: Preserve Gorent's relative image folder structure
 
 ### React / TypeScript Code
 
@@ -90,76 +111,302 @@ Define the plan for importing Gorent Home 1 template into the public site route 
 ### CSS Files
 
 - **Location**: `/src/apps/public/assets/css/`
-- **Scoping**: All Gorent CSS must be scoped under `.public-scope` wrapper class
+- **Scoping**: All Gorent CSS loaded exclusively within `.public-scope` wrapper in `PublicLayout.tsx`
 - **No Gorent CSS imported globally**
 - **No Gorent CSS in admin scope**
 
+### Font Files
+
+- **Location**: `src/apps/public/assets/fonts/`
+- **All Gorent font files (FA, Flaticon, icomoon) remain template-native**
+
 ---
 
-## 4. Import Strategy
+## 4. Copy Map (Exact File/Folder List)
 
-### Source
+### 4A. Sections — HomeOne Specific → `src/apps/public/sections/home-one/`
 
-Components imported from: `gorent-car-rental-react-js-template/src/`
+Source: `gorent-car-rental-react-js-template/src/sections/home-one/`
 
-### Target
+| # | File | Include? | Notes |
+|---|---|---|---|
+| 1 | BannerOne.tsx | YES | Hero slider |
+| 2 | SlidingTextOne.tsx | YES | Marquee |
+| 3 | ServiceOne.tsx | YES | Service cards |
+| 4 | AboutOne.tsx | YES | About section |
+| 5 | ListingOne.tsx | YES | Featured cars |
+| 6 | QuickRequest.tsx | YES | Quick request form |
+| 7 | WhychooseOne.tsx | YES | Why choose (no counter) |
+| 8 | TestimonialOne.tsx | YES | Testimonials |
+| 9 | VideoOne.tsx | YES | Video CTA |
+| 10 | GalleryHomeOne.tsx | YES | Gallery (max 6) |
+| 11 | BrandOne.tsx | YES | Brand logos |
+| 12 | ProcessOne.tsx | NO | Removed per Phase 1 freeze |
+| 13 | PricingOne.tsx | NO | Removed per Phase 1 freeze |
+| 14 | TeamOne.tsx | NO | Removed per Phase 1 freeze |
+| 15 | FaqOne.tsx | NO | Removed per Phase 1 freeze |
 
-Components placed in: `/src/apps/public/`
+### 4B. Sections — Common → `src/apps/public/sections/common/`
 
-### Target Structure
+Source: `gorent-car-rental-react-js-template/src/sections/common/`
 
-```
-src/apps/public/
-  components/         # Shared public components (Header, Footer, StrickyHeader)
-  layouts/            # PublicLayout.tsx (wraps all public pages)
-  pages/              # Page-level components (HomePage.tsx, etc.)
-  sections/           # Section components (BannerOne, ServiceOne, etc.)
-    home-one/         # Home 1 specific sections
-    common/           # Shared sections (Gallery, etc.)
-  assets/
-    css/              # Gorent CSS files (scoped under .public-scope)
-  data/               # Static data files (carData, serviceData, etc.)
-```
+| File | Include? | Notes |
+|---|---|---|
+| Header.tsx | YES | Main header |
+| Footer.tsx | YES | Site footer |
+| StrickyHeader.tsx | YES | Sticky overlay header |
+| LetsTalk.tsx | YES | CTA section |
+| Banner.tsx | NO | Inner page banner |
+| Booking.tsx | NO | Not used by HomeOne |
+| DownloadApp.tsx | NO | Removed per Phase 1 |
+| Gallery.tsx | NO | Replaced by GalleryHomeOne |
 
-### Migration Steps (For Implementation Time)
+### 4C. Components — Elements → `src/apps/public/components/elements/`
 
-1. Copy Gorent page/section components into `/src/apps/public/sections/`
-2. Copy Gorent shared components (Header, Footer) into `/src/apps/public/components/`
-3. Copy Gorent CSS files into `/src/apps/public/assets/css/`
-4. Scope all CSS under `.public-scope` wrapper
-5. Copy Gorent static data files into `/src/apps/public/data/`
-6. Copy Gorent images/assets into `/public/`
-7. Update all import paths to reflect new locations
-8. Rewrite Gorent router usage to react-router-dom v6 `<Routes>` pattern
-9. Remove Gorent-specific dependencies on react-router v7 `createBrowserRouter`
-10. Install missing Gorent dependencies: `framer-motion`, `swiper`, `react-fast-marquee`, `react-countup`, `react-intersection-observer`
-11. Create `PublicLayout.tsx` with `.public-scope` wrapper class
-12. Wire public routes in unified router
-13. Verify visual 1:1 parity
+Source: `gorent-car-rental-react-js-template/src/components/elements/`
+
+| File | Include? | Notes |
+|---|---|---|
+| CustomCursor.tsx | YES | App wrapper |
+| VideoPopup.tsx | YES | App wrapper |
+| SearchProp.tsx | YES | App wrapper |
+| SideBar.tsx | YES | App wrapper |
+| MobileNav.tsx | YES | App wrapper |
+| ScrollToTop.tsx | YES | App wrapper |
+| MainManuList.tsx | YES | Header |
+| MobileManuList.tsx | YES | MobileNav |
+| TextAnimation.tsx | YES | Sections |
+| TypingEffect.tsx | YES | Sections |
+| AdvanceCountUp.tsx | YES | AboutOne |
+| Progressbar.tsx | YES | AboutOne |
+| ErrorBoundary.tsx | YES | Route wrapper |
+| SuspenseWrapper.tsx | YES | Route wrapper |
+| Loading.tsx | YES | Fallback |
+| CustomSelect.tsx | YES | Forms |
+| MainManuListSinglePage.tsx | NO | Not needed |
+| MobileManuListSingle.tsx | NO | Not needed |
+
+### 4D. Components — Context → `src/apps/public/components/context/`
+
+Source: `gorent-car-rental-react-js-template/src/components/context/`
+
+| File | Include? |
+|---|---|
+| ContextType.tsx | YES |
+| GorentContext.tsx | YES |
+| ContextProvider.tsx | YES |
+| useGorentContext.tsx | YES |
+
+### 4E. Components — Link Content → `src/apps/public/components/link-content/`
+
+Source: `gorent-car-rental-react-js-template/src/components/link-content/`
+
+| File | Include? |
+|---|---|
+| LinkType.ts | YES |
+| NavLink.ts | YES |
+
+### 4F. Data Files → `src/apps/public/data/`
+
+Source: `gorent-car-rental-react-js-template/src/all-content/`
+
+| Folder/File | Include? | Notes |
+|---|---|---|
+| listing/ListingData.ts + listType.ts | YES | ListingOne |
+| service/service.ts + serviceType.ts | YES | ServiceOne |
+| testimonials/testimonialsData.ts + testimonialsType.ts | YES | TestimonialOne |
+| gallery/gallaryData.ts | YES | GalleryHomeOne |
+| why-choose/chooseData.ts + chooseType.ts | YES | WhychooseOne |
+| blog/* | NO | Excluded |
+| pricing/* | NO | Excluded |
+| process/* | NO | Excluded |
+| team/* | NO | Excluded |
+| products/* | NO | Excluded |
+| faq/* | NO | Excluded |
+
+### 4G. Assets — CSS → `src/apps/public/assets/css/`
+
+Source: `gorent-car-rental-react-js-template/src/assets/css/`
+
+| File | Include? |
+|---|---|
+| style.css | YES |
+| bootstrap.min.css | YES |
+| font-awesome-all.css | YES |
+| flaticon.css | YES |
+| animate.min.css | YES |
+| custom-animate.css | YES |
+| nice-select.css | YES |
+| images/ (UI sprites) | YES |
+
+### 4H. Assets — Fonts → `src/apps/public/assets/fonts/`
+
+Source: `gorent-car-rental-react-js-template/src/assets/fonts/`
+
+All 15 font files — YES (fa-brands, fa-light, fa-regular, fa-solid, icomoon)
+
+### 4I. Assets — Images → `src/apps/public/assets/images/`
+
+Source: `gorent-car-rental-react-js-template/src/assets/images/`
+
+| Folder | Include? | Notes |
+|---|---|---|
+| backgrounds/ | YES | All background images |
+| resources/ | YES | All resource images |
+| shapes/ | YES | All shape images |
+| brand/ | YES | All brand logos |
+| gallery/ | YES | All gallery images |
+| listing/ | YES | All listing images |
+| testimonial/ | YES | All testimonial images |
+| icon/ | YES | All icon images |
+| favicons/ | YES | All favicon files |
+| blog/ | NO | Not needed for HomeOne MVP |
+| team/ | NO | Team removed |
+| shop/ | NO | Shop out of scope |
+| home-showcase/ | NO | Demo showcase images |
+
+### 4J. Pages → `src/apps/public/pages/`
+
+| File | Include? |
+|---|---|
+| home-one/HomeOne.tsx | YES (adapted per Phase 1 freeze) |
+
+### 4K. Layouts → `src/apps/public/layouts/`
+
+| File | Notes |
+|---|---|
+| PublicLayout.tsx | NEW — `.public-scope` wrapper + GorentContext provider |
+
+### EXCLUDED (Not Imported)
+
+- `documentation/` folder — template docs, not app code
+- All HomeTwo/HomeThree pages + sections
+- All inner pages (about, service, drivers, pricing, faq, error, etc.)
+- All shop pages
+- All blog pages
+- All authentication pages
+- `index-one-page/`, `index-two-one-page/`, `index-three-one-page/`
+- `inner-layout/InnerLayout.tsx`
+
+---
+
+## 5. Public Route Plan
+
+### MVP Routes (Phase 10)
+
+| Route | Component | Layout |
+|---|---|---|
+| `/` | HomeOne | PublicLayout |
+
+### Route Collision Check
+
+- Public: `/` (and future `/about`, `/cars`, `/contact`, `/blog`)
+- Admin: `/admin/*` (frozen)
+- No collision possible — different prefixes
 
 ### Router Integration
 
-- Gorent uses `createBrowserRouter` + `RouterProvider` (react-router v7 pattern) — this will be **abandoned**
-- All page components imported into the unified react-router-dom v6 `<Routes>` tree
-- Public routes: `/`, `/about`, `/cars`, `/contact`, `/blog`, `/rentals/:slug`, `/for-sale/:slug`
-- Admin routes: `/admin/*` (unchanged)
+- Unified router in `src/App.tsx`
+- Public routes at `/` alongside existing admin routes at `/admin/*`
+- Use `react-router-dom` v6 `<Routes>` pattern
+- All Gorent `react-router` v7 imports changed to `react-router-dom` v6
 
 ---
 
-## 5. Parity Verification Gate
+## 6. CSS/SCSS Isolation Plan
 
-Before proceeding to database implementation:
+### Public Styles
 
-- [ ] All 14 sections + StrickyHeader render correctly
-- [ ] Visual 1:1 match with original Gorent Home 1
-- [ ] No CSS leakage to admin scope
-- [ ] No admin CSS leakage to public scope
-- [ ] All static data displays correctly
-- [ ] Responsive behavior matches original
-- [ ] Build passes without errors
-- [ ] Router works: `/` renders public, `/admin` renders admin
-- [ ] No console errors related to imported components
+- All Gorent CSS files imported ONLY inside `PublicLayout.tsx`
+- `PublicLayout.tsx` wraps all content in `<div className="public-scope">`
+- Bootstrap, FontAwesome, Flaticon scoped under `.public-scope`
+
+### Admin Styles
+
+- Unchanged — `.admin-scope` wrapper in `AdminLayout.tsx`
+- Admin SCSS imported only in admin scope
+
+### What Will NOT Change
+
+- No global CSS resets added
+- No shared theme overrides
+- No admin SCSS modifications
+- No Bootstrap version changes
+- No Tailwind modifications
+
+### Isolation Enforcement
+
+- Gorent CSS imports exclusively in `src/apps/public/` scope
+- Admin SCSS imports exclusively in `src/apps/admin/` scope
+- No cross-imports between the two
 
 ---
 
-**STOP — Await further instructions.**
+## 7. Dependency Requirements
+
+| Package | Version | Used By | Status |
+|---|---|---|---|
+| framer-motion | ^12.x | Footer animations, sections | TO INSTALL |
+| react-fast-marquee | ^1.6.x | SlidingTextOne | TO INSTALL |
+| react-countup | ^6.5.x | AboutOne counters | TO INSTALL |
+| react-intersection-observer | ^10.x | CountUp triggers | TO INSTALL |
+| @ramonak/react-progress-bar | ^5.4.x | AboutOne progress bars | TO INSTALL |
+| swiper | ^12.x | BannerOne slider | ALREADY INSTALLED |
+
+Note: All Gorent `react-router` v7 imports will be changed to `react-router-dom` v6.
+
+---
+
+## 8. Phase 10 Task Breakdown (Ordered, with Gates)
+
+| Task | Scope | Gate |
+|---|---|---|
+| 10.1 | Create Restore Point | Confirm before proceeding |
+| 10.2 | Install missing deps (framer-motion, react-fast-marquee, react-countup, react-intersection-observer, @ramonak/react-progress-bar) | Build compiles |
+| 10.3 | Copy assets (CSS + fonts + images) | Asset count matches |
+| 10.4 | Copy data files | No type errors |
+| 10.5 | Copy context + link content | No circular imports |
+| 10.6 | Copy element components | No missing deps |
+| 10.7 | Copy section components | All importable |
+| 10.8 | Fix all import paths (including react-router v7 to v6) | Zero unresolved imports |
+| 10.9 | Create PublicLayout + HomePage | Components render |
+| 10.10 | Wire public routes in unified router | Both `/` and `/admin/*` work |
+| 10.11 | CSS scoping verification | No style leakage |
+| 10.12 | Visual parity verification (20-point checklist) | All sections render 1:1 |
+| 10.13 | Final build + completion report | Build compiles, no new errors |
+
+### Post-Import Parity Checklist (Task 10.12)
+
+- [ ] All 14 sections + StrickyHeader render
+- [ ] Hero slider works (Swiper)
+- [ ] Marquee text scrolls
+- [ ] Service cards display
+- [ ] About section with images + progress bars
+- [ ] Car listings display
+- [ ] Quick Request form renders
+- [ ] Why Choose cards display
+- [ ] Testimonials display
+- [ ] Video section with play button
+- [ ] Gallery shows 6 items
+- [ ] Brand logos display
+- [ ] LetsTalk CTA displays
+- [ ] Footer renders with links
+- [ ] Sticky header appears on scroll
+- [ ] Mobile responsive layout works
+- [ ] Custom cursor works
+- [ ] Video popup works
+- [ ] Mobile nav works
+- [ ] Scroll to top works
+
+---
+
+## 9. Notes
+
+- Apexcharts type error is explicitly OUT OF SCOPE unless it blocks Phase 10 compilation
+- Duplicate detection scan required before implementation: if a component exists in `/src/shared` or `/src/apps/admin`, do NOT re-create for public; reference or copy only if required for 1:1 parity with isolation intact
+- No database/Supabase work in this phase
+- No custom design decisions — copy template exactly
+
+---
+
+**STOP — Await implementation instruction.**
