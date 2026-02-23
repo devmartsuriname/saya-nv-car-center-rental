@@ -8,7 +8,7 @@ import * as yup from 'yup'
 import { useAuthContext } from '@/apps/admin/context/useAuthContext'
 import { useNotificationContext } from '@/apps/admin/context/useNotificationContext'
 import httpClient from '@/apps/admin/helpers/httpClient'
-import type { UserType } from '@/types/auth'
+import type { UserType } from '@/shared/types/auth'
 
 const useSignIn = () => {
   const [loading, setLoading] = useState(false)

@@ -40,12 +40,12 @@ const ProfileDropdown = () => {
           <IconifyIcon icon="solar:help-outline" className="align-middle me-2 fs-18" />
           <span className="align-middle">Help</span>
         </DropdownItem>
-        <DropdownItem href="/auth/lock-screen">
+        <DropdownItem href="/admin/auth/lock-screen">
           <IconifyIcon icon="solar:lock-keyhole-outline" className="align-middle me-2 fs-18" />
           <span className="align-middle">Lock screen</span>
         </DropdownItem>
         <div className="dropdown-divider my-1" />
-        <DropdownItem as={Link} className=" text-danger" to="/auth/sign-in">
+        <DropdownItem as={Link} className=" text-danger" to="/admin/auth/sign-in">
           <IconifyIcon icon="solar:logout-3-outline" className="align-middle me-2 fs-18" />
           <span className="align-middle" onClick={removeSession}>
             Logout

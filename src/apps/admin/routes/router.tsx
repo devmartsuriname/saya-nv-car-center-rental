@@ -27,7 +27,7 @@ const AppRouter = (props: RouteProps) => {
                 ) : (
                   <Navigate
                     to={{
-                      pathname: '/auth/sign-in',
+                      pathname: '/admin/auth/sign-in',
                       search: 'redirectTo=' + route.path,
                     }}
                   />

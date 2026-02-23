@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import type { ChildrenType } from '@/types/component-props'
-import type { LayoutState, LayoutType, MenuType, OffcanvasControlType, LayoutOffcanvasStatesType, ThemeType } from '@/types/context'
+import type { ChildrenType } from '@/shared/types/component-props'
+import type { LayoutState, LayoutType, MenuType, OffcanvasControlType, LayoutOffcanvasStatesType, ThemeType } from '@/shared/types/context'
 
-import { toggleDocumentAttribute } from '@/utils/layout'
+import { toggleDocumentAttribute } from '@/shared/utils/layout'
 import useQueryParams from '@/apps/admin/hooks/useQueryParams'
 import useLocalStorage from '@/shared/hooks/useLocalStorage'
 

@@ -1,5 +1,5 @@
 import { MENU_ITEMS } from '@/apps/admin/assets/data/menu-items'
-import type { MenuItemType } from '@/types/menu'
+import type { MenuItemType } from '@/shared/types/menu'
 
 export const getMenuItems = (): MenuItemType[] => {
   return MENU_ITEMS

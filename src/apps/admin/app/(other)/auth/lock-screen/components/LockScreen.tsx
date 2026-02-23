@@ -76,7 +76,7 @@ const LockScreen = () => {
                 </Card>
                 <p className="text-center mt-4 text-white text-opacity-50">
                   Not you? return&nbsp;
-                  <Link to="/auth/sign-up" className="text-decoration-none text-white fw-bold">
+                  <Link to="/admin/auth/sign-up" className="text-decoration-none text-white fw-bold">
                     Sign Up
                   </Link>
                 </p>

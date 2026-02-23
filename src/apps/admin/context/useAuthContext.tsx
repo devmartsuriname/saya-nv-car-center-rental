@@ -1,8 +1,8 @@
-import type { UserType } from '@/types/auth'
+import type { UserType } from '@/shared/types/auth'
 import { deleteCookie, getCookie, hasCookie, setCookie } from 'cookies-next'
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { ChildrenType } from '../types/component-props'
+import type { ChildrenType } from '@/shared/types/component-props'
 
 export type AuthContextType = {
   user: UserType | undefined
@@ -124,7 +124,7 @@ export function AuthProvider({ children }: ChildrenType) {
     
     setUser(undefined)
     setIsAuthenticated(false)
-    navigate('/auth/sign-in')
+    navigate('/admin/auth/sign-in')
   }
 
   return (

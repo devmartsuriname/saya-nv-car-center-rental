@@ -34,10 +34,10 @@ const ResetPassword = () => {
                   <CardBody className=" p-5">
                     <div className="text-center">
                       <div className="mx-auto mb-4 text-center auth-logo">
-                        <Link to="/dashboards" className="logo-dark">
+                        <Link to="/admin/dashboards" className="logo-dark">
                           <img src={DarkLogo} height={32} alt="logo dark" />
                         </Link>
-                        <Link to="/dashboards" className="logo-light">
+                        <Link to="/admin/dashboards" className="logo-light">
                           <img src={LightLogo} height={28} alt="logo light" />
                         </Link>
                       </div>
@@ -66,7 +66,7 @@ const ResetPassword = () => {
                 </Card>
                 <p className="text-center mt-4 text-white text-opacity-50">
                   Back to&nbsp;
-                  <Link to="/auth/sign-in" className="text-decoration-none text-white fw-bold">
+                  <Link to="/admin/auth/sign-in" className="text-decoration-none text-white fw-bold">
                     Sign In
                   </Link>
                 </p>

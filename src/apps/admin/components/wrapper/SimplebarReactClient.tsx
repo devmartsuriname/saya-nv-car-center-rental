@@ -1,4 +1,4 @@
-import type { ChildrenType } from '@/types/component-props'
+import type { ChildrenType } from '@/shared/types/component-props'
 import type SimpleBarCore from 'simplebar-core'
 import SimpleBar, { type Props } from 'simplebar-react'
 

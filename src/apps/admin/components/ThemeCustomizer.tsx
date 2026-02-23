@@ -1,7 +1,7 @@
 import { Button, Col, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from 'react-bootstrap'
-import type { MenuType, OffcanvasControlType, ThemeType } from '@/types/context'
+import type { MenuType, OffcanvasControlType, ThemeType } from '@/shared/types/context'
 import { useLayoutContext } from '@/apps/admin/context/useLayoutContext'
-import { toSentenceCase } from '@/utils/change-casing'
+import { toSentenceCase } from '@/shared/utils/change-casing'
 import SimplebarReactClient from './wrapper/SimplebarReactClient'
 
 const ColorScheme = () => {

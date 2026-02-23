@@ -2,7 +2,7 @@ import AnimationStar from '@/apps/admin/components/AnimationStar'
 import ErrorBoundary from '@/apps/admin/components/ErrorBoundary'
 import LoadingFallback from '@/apps/admin/components/LoadingFallback'
 import Footer from '@/apps/admin/components/layout/Footer'
-import { ChildrenType } from '@/types/component-props'
+import { ChildrenType } from '@/shared/types/component-props'
 import { lazy, Suspense } from 'react'
 import { Container } from 'react-bootstrap'
 
@@ -11,7 +11,7 @@ const VerticalNavigationBar = lazy(() => import('@/apps/admin/components/layout/
 
 const AdminLayout = ({ children }: ChildrenType) => {
   return (
-    <div className="wrapper">
+    <div className="admin-scope wrapper">
       <Suspense fallback={<LoadingFallback />}>
         <TopNavigationBar />
       </Suspense>

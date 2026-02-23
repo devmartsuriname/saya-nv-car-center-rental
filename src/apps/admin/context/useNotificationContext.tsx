@@ -3,7 +3,7 @@ import { ToastBody, ToastHeader } from 'react-bootstrap'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 
-import type { BootstrapVariantType, ChildrenType } from '@/types/component-props'
+import type { BootstrapVariantType, ChildrenType } from '@/shared/types/component-props'
 
 type ShowNotificationType = {
   title?: string

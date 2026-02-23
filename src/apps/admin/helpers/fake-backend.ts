@@ -1,4 +1,4 @@
-import type { UserType } from '@/types/auth'
+import type { UserType } from '@/shared/types/auth'
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
