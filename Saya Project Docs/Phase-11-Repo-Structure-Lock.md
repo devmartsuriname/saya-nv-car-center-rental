@@ -199,3 +199,29 @@ Before any database implementation begins, the following sequence is locked:
 ---
 
 **STOP — Await further instructions.**
+
+---
+
+## 7. Admin Lock (Phase 0 Closure)
+
+**Date**: 2026-02-23
+**Status**: LOCKED
+
+Phase 0 Repo Stabilization is complete. The following are frozen:
+
+- Admin structure frozen under `src/apps/admin/*`
+- Shared utilities frozen under `src/shared/*`
+- Router prefix `/admin` is frozen
+- All 39 demo routes are permanently removed and must not be reintroduced
+- `.admin-scope` wrapper class applied to AdminLayout
+- No further admin structural changes until explicitly authorized
+- Only `/admin/*` routes are allowed for Admin
+- Auth routes must remain under `/admin/auth/*`
+- No demo routes (including base-ui, showcase, example, or gallery routes) may be reintroduced under any circumstance
+- `routes/index.tsx` must contain only production Admin routes
+- Admin styling remains scoped to Admin only
+- Public frontend must not inherit Admin SCSS
+- No global admin overrides exist outside admin scope
+- Single build architecture does not allow style leakage between public and admin layers
+
+Any modification to the above requires explicit approval from Delroy.

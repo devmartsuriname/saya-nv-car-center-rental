@@ -1,32 +1,50 @@
 # Architecture
 
-## Status: Planning Phase
+## Status: Phase 0 Complete
 
-No structural changes have been implemented yet. The project is in documentation and planning mode.
+Phase 0 — Repo Stabilization is complete. Admin structure has been migrated, isolated, and locked.
 
 ## Project Documentation
 
 All project-specific documentation is maintained in `/Saya Project Docs/`.
 
 - **Phase 0 Plan**: `/Saya Project Docs/Phase-0-Repo-Structure-Plan.md`
-  - Current repo analysis
-  - Proposed dual-structure (frontend + /admin)
-  - Style isolation strategy
-  - Router unification approach
-  - Option A vs B comparison
-  - Risk matrix and recommendation
+- **Repo Structure Lock**: `/Saya Project Docs/Phase-11-Repo-Structure-Lock.md`
 
 ## Current Structure
 
-- `src/` — Darkone admin template (active root app)
-- `gorent-car-rental-react-js-template/` — Gorent React template (reference only)
-- `archive/` — Frozen snapshots
-- `docs-standard/` — Devmart global standards (frozen)
+```text
+src/
+  main.tsx                    # Single Vite entry point
+  App.tsx                     # Top-level router mount
+  apps/
+    admin/                    # Darkone admin (route: /admin/*) — LOCKED
+      app/                    # Admin app shell
+      components/             # Admin UI components (Darkone 1:1)
+      context/                # Auth context, theme context
+      helpers/                # Admin helper utilities (fake-backend)
+      hooks/                  # Admin-specific hooks
+      layouts/                # AdminLayout.tsx (.admin-scope wrapper)
+      routes/                 # Admin route definitions
+      assets/                 # Admin SCSS + images
+    public/                   # Public site placeholder (Phase 10 target)
+  shared/                     # Shared utilities — LOCKED
+    lib/                      # utils.ts (cn helper)
+    utils/                    # Shared utility functions
+    types/                    # Shared TypeScript types
+    hooks/                    # Shared hooks
+```
 
-## Planned Structure
+- `gorent-car-rental-react-js-template/` — Gorent React template (source reference for Phase 10)
+
+## Architecture
 
 Single Vite app with two route trees:
-- `src/frontend/` — Car Center / Car Rental website (from Gorent React)
-- `src/admin/` — Darkone admin dashboard
+- `src/apps/public/` — Car Center / Car Rental website (from Gorent React) — **not yet imported**
+- `src/apps/admin/` — Darkone admin dashboard — **frozen**
 
-Style isolation via wrapper classes (`.gorent-frontend`, `.darkone-admin`). Unified `react-router-dom` v6 routing.
+Style isolation via wrapper classes (`.admin-scope`, `.public-scope`). Unified `react-router-dom` v6 routing.
+
+## Next Phase
+
+Phase 10 — Frontend 1:1 Parity Import (Gorent static pages into `src/apps/public/`). Awaiting instruction.
