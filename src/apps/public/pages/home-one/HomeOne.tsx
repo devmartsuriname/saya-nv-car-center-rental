@@ -28,9 +28,9 @@ const HomeOne: React.FC = () => {
             <WhychooseOne />
             <TestimonialOne />
             <VideoOne />
-            <GalleryHomeOne />
             <BrandOne />
             <LetsTalk />
+            <GalleryHomeOne />
             <Footer />
             <StrickyHeader />
         </div>
