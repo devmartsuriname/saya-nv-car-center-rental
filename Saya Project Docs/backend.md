@@ -23,3 +23,7 @@ Phase 10 (Frontend 1:1 Parity Import) involves **zero backend changes**. All dat
 - Admin backend remains under `src/apps/admin/` (fake-backend, auth helpers, auth context).
 - Frontend backend requirements TBD — no backend dependency planned until after Phase 10 parity.
 - Database work begins only after Frontend 1:1 Parity is formally approved.
+
+## Company Details Intake (2026-02-24)
+
+Company details intake is documentation-only. No backend changes performed. Files created: `company-profile.md` and `content-seeding-plan.md` under `/Saya Project Docs/`. Static seed JSON files are planned but not yet created. No Supabase work.
