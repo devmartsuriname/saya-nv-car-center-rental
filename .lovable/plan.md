@@ -1,122 +1,408 @@
-# Phase 11 — Static Seed Implementation Plan
+# Phase 10 -- Public Site Completion Plan
 
-## Overview
+## Scope Summary
 
-Create 4 static JSON seed files with verified company data and placeholders, then wire them into existing HomeOne sections. No layout, CSS, or template structure changes.
-
-## Technical Challenge: Image Imports
-
-The existing data files (listings, testimonials) use Vite image imports (`import listing1 from "../../assets/images/..."`). JSON files cannot contain module imports. The solution is a **thin TS adapter pattern**: JSON holds all text/metadata content, and existing TS data files are updated to merge JSON content with image imports. This preserves Vite's asset pipeline while sourcing content from JSON.
+Implement all 10 inner pages linked from HomeOne's header/footer/CTA, add InnerLayout with routing, and replace demo contact info with verified Saya NV data. Brand colors remain unchanged until hex codes are provided.
 
 ---
 
-## Step 0: Restore Point
+## Pre-Requisite: Restore Point
 
-Create `Saya Project Docs/Restore Points/RP-Phase11-StaticSeed-20260224.md`
-
-## Step 1: Create JSON Seed Files
-
-### 1a. `src/apps/public/data/company.json`
-
-Populated from verified `company-profile.md`:
-
-- Legal name, trading name, address, all 3 phone numbers, email, website, social links, hours, copyright line
-
-### 1b. `src/apps/public/data/services.json`
-
-4 service entries matching existing `servicesOneData` structure (id, icon, title, description). Descriptions updated with `"PLACEHOLDER — NEEDS_CLIENT_INPUT"` flag to indicate they need real copy.
-
-### 1c. `src/apps/public/data/fleet_placeholders.json`
-
-6 placeholder vehicle entries with text metadata (brand, title, transmission, mileage, fuel, package, minAge, persons, pricePerDay). Each flagged `"_placeholder": true`. Image filenames referenced as strings (mapped to imports in the TS adapter).
-
-### 1d. `src/apps/public/data/testimonials_placeholders.json`
-
-6 placeholder testimonial entries with text content (name, role, text, rating). Each flagged `"_placeholder": true`. Image filenames referenced as strings.
-
-## Step 2: Update Existing TS Data Files (Adapter Pattern)
-
-### 2a. `src/apps/public/data/service/service.ts`
-
-Import from `../services.json` and re-export as `servicesOneData`. Since services use CSS icon classes (not image imports), this is a direct mapping.
-
-### 2b. `src/apps/public/data/listing/ListingData.ts`
-
-Import from `../fleet_placeholders.json`. Keep existing image imports. Map JSON entries to `ListingItem[]` by matching image filenames to imported image modules.
-
-### 2c. `src/apps/public/data/testimonials/testimonialsData.ts`
-
-Import from `../testimonials_placeholders.json`. Keep existing image imports. Map JSON entries to `TestimonialItem[]` by matching image filenames to imported image modules.
-
-## Step 3: Update Footer with Company Data
-
-### 3a. `src/apps/public/sections/common/Footer.tsx`
-
-Import `company.json` and replace hardcoded values:
-
-- Address: "4140 Parker Rd..." replaced with "Hofstraat #121, Paramaribo, Suriname"
-- Phone: "(219) 555-0114" replaced with "52 15 33"
-- Email: "[gorent@gmail.com](mailto:gorent@gmail.com)" replaced with "[sales@sayanv.com](mailto:sales@sayanv.com)"
-- Copyright: "Gorent" replaced with "Saya N.V."
-
-No class name, layout, or structural changes.
-
-## Step 4: Housekeeping Updates
-
-- Update `Saya Project Docs/architecture.md` with Phase 11 note
-- Update `Saya Project Docs/backend.md` with Phase 11 note
-
-## Step 5: Build Verification
-
-- Confirm build compiles
-- Confirm no new console errors
-- Confirm layout unchanged
-- Confirm content now reads from JSON
+Create `Saya Project Docs/Restore Points/RP-Phase10-PublicSiteCompletion-20260224.md` documenting all files to be created/modified.
 
 ---
 
-## Files Created (6)
+## Critical Dependency: Missing Image Assets
 
-1. `Saya Project Docs/Restore Points/RP-Phase11-StaticSeed-20260224.md`
-2. `src/apps/public/data/company.json`
-3. `src/apps/public/data/services.json`
-4. `src/apps/public/data/fleet_placeholders.json`
-5. `src/apps/public/data/testimonials_placeholders.json`
+The template's inner pages require image directories that do NOT exist in the project yet:
 
-## Files Modified (5)
+- `src/apps/public/assets/images/blog/` -- 27 images (blog cards, details, comments, sidebar posts)
+- `src/apps/public/assets/images/team/` -- 23 images (driver photos, team tabs, driver detail)
 
-1. `src/apps/public/data/service/service.ts` — import from services.json
-2. `src/apps/public/data/listing/ListingData.ts` — import from fleet_placeholders.json
-3. `src/apps/public/data/testimonials/testimonialsData.ts` — import from testimonials_placeholders.json
-4. `src/apps/public/sections/common/Footer.tsx` — use company.json for contact/copyright
-5. `Saya Project Docs/architecture.md` — Phase 11 note
-6. `Saya Project Docs/backend.md` — Phase 11 note
+These must be copied from `gorent-car-rental-react-js-template/src/assets/images/blog/` and `gorent-car-rental-react-js-template/src/assets/images/team/` respectively. Without these, inner pages will have broken images.
 
-Note: NOTE — PHASE 11 IS BLOCKED (NO DB YET / NO PLACEHOLDER-FIRST)
+Additionally, some shape images used by inner page sections must be verified:
 
-- We are NOT moving to database/Supabase yet.
+- `testimonial-two-shape-1.png`, `testimonial-two-shape-2.png` in `shapes/`
 
-- Priority is to complete FULL public-site parity first (all required pages/routes from the Gorent template) — currently only HomeOne is working.
+---
 
-- No demo content must remain on public pages. Replace with verified Saya NV copy/colors now, so we do not create double work later.
+## Execution Batches
 
-- Phase 11 (static seed JSON wiring) may only start AFTER:
+Due to the large scope (~60+ files to create/modify), this plan is split into 4 sequential batches. Each batch must compile before proceeding.
 
-  (1) All required public routes/pages render 1:1 (template parity), and
+### Batch 1: Foundation (InnerLayout, Banner, Gallery, Data Files, Routes)
 
-  (2) Saya NV brand colors + core company content are locked (no demo text),
+**New Files:**
 
-  (3) CSS isolation is verified (admin assets never load on public routes).
+1. `src/apps/public/pages/inner-layout/InnerLayout.tsx` -- Copied from template. Wraps inner pages with Header, Gallery, Footer, StrickyHeader. Uses `Outlet` from react-router-dom (v6 syntax, not v7).
+2. `src/apps/public/sections/common/Banner.tsx` -- Copied from template. Simple breadcrumb banner. Uses `Link` from react-router-dom.
+3. `src/apps/public/sections/common/Gallery.tsx` -- Copied from template. Full gallery Swiper (all items, not limited to 6 like HomeOne).
+4. `src/apps/public/data/team/teamData.ts` -- Copied from template. Contains `teamButtonData`, `teamTabData`, `teamMembersTwo`, `teamData`, `driversData`.
+5. `src/apps/public/data/team/teamType.ts` -- Copied from template.
+6. `src/apps/public/data/blog/blogData.ts` -- Copied from template. Contains `blogData`, `blogStandardListData`.
+7. `src/apps/public/data/blog/blogType.ts` -- Copied from template.
+8. `src/apps/public/data/process/processData.ts` -- Copied from template. Contains `processSteps`, `pricingPlansThree`.
+9. `src/apps/public/data/process/processType.ts` -- Copied from template.
+10. `src/apps/public/data/faq/faqType.ts` -- Copied from template (if needed by any inner page).
 
-- If any CSS mismatch remains (e.g., Booking form field styling), diagnose root cause (selector mismatch / missing CSS import / wrong input types / asset path) and fix — no guessing.  
+**Modified Files:**
+
+11. `src/App.tsx` -- Add `/inner/*` route tree with InnerLayout wrapping all inner page routes. All inner routes lazy-loaded.
+
+**Key Routing Adaptations:**
+
+- Template uses `react-router` v7 (`import { Link } from 'react-router'`). Project uses v6 (`import { Link } from 'react-router-dom'`). Every copied file must change imports accordingly.
+- Template uses `<Outlet />` from `react-router`. Project must import from `react-router-dom`.
+- Template router uses `createBrowserRouter`. Project uses `<Routes>/<Route>` pattern in App.tsx.
+
+### Batch 2: Inner Page Components (Sections)
+
+**New Section Files (copied 1:1 from template, adapted for v6 imports and correct data paths):**
+
+12. `src/apps/public/sections/about/AboutInner.tsx`
+13. `src/apps/public/sections/about/ListingInner.tsx`
+14. `src/apps/public/sections/about/TeamInner.tsx`
+15. `src/apps/public/sections/about/TestimonianInner.tsx`
+16. `src/apps/public/sections/service/ServiceInner.tsx`
+17. `src/apps/public/sections/service/ServiceInnerTwo.tsx`
+18. `src/apps/public/sections/process/ProcessInner.tsx`
+19. `src/apps/public/sections/booking/BookingInner.tsx`
+20. `src/apps/public/sections/driver/DriverDetailsMain.tsx`
+21. `src/apps/public/sections/contact/ContactMain.tsx`
+22. `src/apps/public/sections/cars/CarsMain.tsx`
+23. `src/apps/public/sections/cars/CarListVOneMain.tsx`
+24. `src/apps/public/sections/cars/CarListVTwoMain.tsx`
+25. `src/apps/public/sections/cars/CarListVThreeMain.tsx`
+26. `src/apps/public/sections/cars/CarListingRight.tsx`
+27. `src/apps/public/sections/car-list-single/CarListingSingleMain.tsx`
+28. `src/apps/public/sections/car-list-single/ListingTop.tsx`
+29. `src/apps/public/sections/car-list-single/ListingSliders.tsx`
+30. `src/apps/public/sections/car-list-single/ListingBottomLeft.tsx`
+31. `src/apps/public/sections/car-list-single/ListingBottomRight.tsx`
+32. `src/apps/public/sections/blog/BlogMain.tsx`
+33. `src/apps/public/sections/blog/BlogOne.tsx`
+34. `src/apps/public/sections/blog/BlogSideBar.tsx`
+35. `src/apps/public/sections/blog/BlogDetailsMain.tsx`
+36. `src/apps/public/sections/blog/BlogContent.tsx` (if used by BlogStandard/LeftSidebar/RightSidebar)
+37. `src/apps/public/sections/blog/BlogStandardMain.tsx`
+38. `src/apps/public/sections/blog/BlogLeftSidebarMain.tsx`
+39. `src/apps/public/sections/blog/BlogRightSidebarMain.tsx`
+
+### Batch 3: Inner Page Containers
+
+**New Page Files (copied 1:1 from template):**
+
+40. `src/apps/public/pages/about/About.tsx`
+41. `src/apps/public/pages/service/Service.tsx`
+42. `src/apps/public/pages/drivers/Drivers.tsx`
+43. `src/apps/public/pages/driver-details/DriverDetails.tsx`
+44. `src/apps/public/pages/blog/Blog.tsx`
+45. `src/apps/public/pages/blog-details/BlogDetails.tsx`
+46. `src/apps/public/pages/blog-standard/BlogStandard.tsx`
+47. `src/apps/public/pages/blog-left-sidebar/BlogLeftSidebar.tsx`
+48. `src/apps/public/pages/blog-right-sidebar/BlogRightSidebar.tsx`
+49. `src/apps/public/pages/contact/Contact.tsx`
+50. `src/apps/public/pages/cars/Cars.tsx`
+51. `src/apps/public/pages/car-list-v-one/CarListVOne.tsx`
+52. `src/apps/public/pages/car-list-v-two/CarListVTwo.tsx`
+53. `src/apps/public/pages/car-list-v-three/CarListVThree.tsx`
+54. `src/apps/public/pages/listing-single/CarListingSingle.tsx`
+
+### Batch 4: Content Replacement + Housekeeping
+
+**Step 3 -- Saya NV Content Replacement (demo text only, NOT colors):**
+
+Files to modify (replace hardcoded demo contact info with Saya NV verified data):
+
+55. `src/apps/public/sections/common/Header.tsx` -- Replace phone, email, address in top bar
+56. `src/apps/public/sections/common/StrickyHeader.tsx` -- Replace "Call Anytime" phone number
+57. `src/apps/public/sections/common/Footer.tsx` -- Replace address, phone, email, copyright "Gorent" to "Saya N.V."
+58. `src/apps/public/components/elements/SideBar.tsx` -- Replace sidebar contact info (address, phone, email)
+59. `src/apps/public/sections/common/LetsTalk.tsx` -- Replace phone number if hardcoded
+60. `src/apps/public/sections/contact/ContactMain.tsx` -- Replace demo phone, email, address
+
+**Replacements to apply everywhere:**
+
+- Address: "Hofstraat #121, Paramaribo, Suriname"
+- Landline: "52 15 33"
+- Email: "[sales@sayanv.com](mailto:sales@sayanv.com)"
+- WhatsApp: "+597 8651510"
+- Mobile: "+597 740-3744"
+- Copyright: "Saya N.V."
+- Social: Facebook (facebook.com/SayanvOfficial), Instagram (@sayanv_official)
+
+**NOT replaced (awaiting hex codes):**
+
+- Brand colors (CSS variables / token values)
+- Logo images (keep template logos until real Saya logo provided)
+- Hero/banner text (keep template text until client provides tagline)
+- Service descriptions (keep template text)
+- About Us text (keep template text)
+
+**Housekeeping:**
+
+61. `Saya Project Docs/architecture.md` -- Note Phase 10 inner pages completion
+62. `Saya Project Docs/backend.md` -- Confirm no DB work
+
+---
+
+## Routes Summary (App.tsx)
+
+```text
+/                       -> HomeOne (existing)
+/inner                  -> InnerLayout wrapper
+  /inner/about          -> About
+  /inner/services       -> Service
+  /inner/drivers        -> Drivers
+  /inner/driver-details -> DriverDetails
+  /inner/blog           -> Blog
+  /inner/blog-standard  -> BlogStandard
+  /inner/blog-left-sidebar -> BlogLeftSidebar
+  /inner/blog-right-sidebar -> BlogRightSidebar
+  /inner/blog-details   -> BlogDetails
+  /inner/contact        -> Contact
+  /inner/cars           -> Cars
+  /inner/car-list-v-1   -> CarListVOne
+  /inner/car-list-v-2   -> CarListVTwo
+  /inner/car-list-v-3   -> CarListVThree
+  /inner/listing-single -> CarListingSingle
+```
+
+All routes are lazy-loaded within the PublicLayout scope (public-scope class wrapper).  
   
-What Is NOT Changed
+==============================
 
-- No CSS/SCSS modifications
-- No template structure changes
-- No new libraries
+PHASE 10 — HARD STOP GATE CONTROL
+
+(Strict Governance Enforcement)
+
+==============================
+
+This project is executed in 4 Batches.
+
+NO batch may proceed automatically into the next.
+
+After each batch, execution must STOP and wait for explicit approval.
+
+---------------------------------
+
+GLOBAL RULES (APPLIES TO ALL BATCHES)
+
+---------------------------------
+
+1. Create a Restore Point BEFORE starting each batch:
+
+   Saya Project Docs/Restore Points/
+
+   RP-Phase10-BatchX-<date>.md
+
+2. After completing a batch:
+
+   - Provide a detailed report
+
+   - List ALL files created/modified
+
+   - Confirm build status
+
+   - Confirm no new console errors
+
+   - Confirm admin routes unaffected
+
+   - Confirm no CSS files modified
+
+   - Confirm no new libraries added
+
+3. STOP after report.
+
+   Do NOT continue to next batch without explicit approval.
+
+=================================
+
+BATCH 1 STOP GATE
+
+=================================
+
+Must verify:
+
+- InnerLayout.tsx compiles correctly
+
+- Banner renders correctly
+
+- Gallery renders correctly
+
+- All data files import without errors
+
+- App.tsx routing works for at least:
+
+    /inner/about
+
+    /inner/contact
+
+- No broken images from newly copied directories
+
+- "/" (HomeOne) visually unchanged
+
+- /admin/* still loads correctly
+
+- No font leakage
+
+- No CSS files modified
+
+If ANY error exists:
+
+Fix completely before requesting approval.
+
+STOP and report.
+
+=================================
+
+BATCH 2 STOP GATE
+
+=================================
+
+Must verify:
+
+- All section components render without TypeScript errors
+
+- No undefined imports
+
+- No missing data references
+
+- No console errors
+
+- Swiper components function properly
+
+- No layout shifts compared to template
+
+- No CSS edits were made
+
+Provide screenshot evidence for:
+
+- About
+
+- Service
+
+- Cars
+
+- Blog
+
+STOP and report.
+
+=================================
+
+BATCH 3 STOP GATE
+
+=================================
+
+Must verify:
+
+- All routes under /inner/* resolve
+
+- No 404 navigation
+
+- Footer Quick Links all navigate correctly
+
+- Footer Services links navigate correctly
+
+- Breadcrumb Banner displays correctly per page
+
+- Gallery appears on all inner pages via InnerLayout
+
+- No layout break on mobile (basic responsive test)
+
+STOP and report.
+
+=================================
+
+BATCH 4 STOP GATE
+
+=================================
+
+Must verify:
+
+- All demo contact info replaced with Saya NV data
+
+- No "Gorent" text remains
+
+- No demo phone/email remains
+
+- No accidental content deletions
+
+- No color changes applied
+
+- No logo changes applied
+
+- No CSS modifications made
+
+Search project for:
+
+   "Gorent"
+
+   "[support@gmail.com](mailto:support@gmail.com)"
+
+   "+92 (8800)"
+
+   "Main Street"
+
+   "Melborne"
+
+All must return zero matches.
+
+STOP and report.
+
+=================================
+
+ABSOLUTE RULES
+
+=================================
+
+- Do NOT refactor.
+
+- Do NOT optimize.
+
+- Do NOT improve structure.
+
+- Do NOT touch admin.
+
+- Do NOT modify CSS.
+
+- Do NOT introduce new design ideas.
+
+- Copy 1:1 from template and adapt ONLY routing imports.
+
+If something requires interpretation:
+
+STOP and ask.
+
+Await explicit approval before proceeding to next batch.  
+
+
+---
+
+## What Is NOT Changed
+
+- No CSS/SCSS files modified
 - No admin files touched
+- No new libraries added
 - No Supabase/database work
-- No state management additions
-- All existing class names preserved
-- All existing component hierarchy preserved
+- No brand color changes (awaiting hex codes)
+- No logo replacements
+- Template class names and component hierarchy preserved 1:1
+- All template demo content (hero text, service descriptions, about copy) preserved until client provides real copy
+
+---
+
+## Verification Checklist
+
+After implementation:
+
+- Build compiles without errors
+- No new console errors on "/" or any "/inner/*" route
+- All footer "Quick Links" navigate to working pages
+- All footer "Services" links navigate to working pages
+- Gallery appears on inner pages via InnerLayout
+- Banner breadcrumb displays correctly on each inner page
+- HomeOne layout and section order unchanged
+- Admin routes ("/admin/*") unaffected
+- Contact details show Saya NV info (not demo data)
