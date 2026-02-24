@@ -70,3 +70,7 @@ Style isolation via wrapper classes (`.admin-scope`, `.public-scope`) + **admin 
 ## Next Phase
 
 Phase 10 is COMPLETE. Awaiting formal parity approval before DB Wave 1 (ENUMs + Auth + Base Tables).
+
+## Company Details Intake (2026-02-24)
+
+No DB/Supabase work performed. Company details intake is documentation-only (company-profile.md + content-seeding-plan.md). Content seeding is docs + static placeholders only. No code changes, no UI modifications.
