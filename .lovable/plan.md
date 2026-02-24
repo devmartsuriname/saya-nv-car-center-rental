@@ -1,103 +1,110 @@
 
-# Phase 10 — Final Parity Correction Plan
 
-## Diagnostic Summary
+# Company Details Intake and Content Seeding Plan (Docs-Only)
 
-### SECTION A: CSS Isolation (Font Leak)
-**STATUS: FIXED** — The lazy-loading of `AdminApp` via `React.lazy()` in `App.tsx` ensures admin SCSS (including "Play" font) is NOT loaded on `/`. Verified via browser: the public page renders with Gorent fonts (Roboto / Inter Tight). The admin bundle loads only when navigating to `/admin/*`.
+## Objective
+Create two documentation files with verified company details and a content seeding blueprint. No code changes, no database work, no UI modifications.
 
-No further action needed. If you still see "Play" font, do a hard refresh (Ctrl+Shift+R) to clear cached CSS.
-
-### SECTION B: Header Issues Found
-Three problems remain in the header/sticky header:
-
-**B1. StrickyHeader still has cart icon (04 badge)**
-- File: `src/apps/public/sections/common/StrickyHeader.tsx` lines 44-49
-- The main `Header.tsx` had cart removed, but `StrickyHeader.tsx` was NOT updated
-- The cart icon with "04" badge visible in all screenshots is from `StrickyHeader`
-- Fix: Remove `main-menu__cart-box` div from StrickyHeader
-
-**B2. StrickyHeader uses wrong nav list**
-- File: `src/apps/public/sections/common/StrickyHeader.tsx` line 38
-- Currently: `pathName === "/index-one-page" ? onePageManuListOne : onePageManuListThree`
-- Since path is `/`, it uses `onePageManuListThree` (different item order + "Contact" instead of "Testimonial")
-- Fix: Always use `onePageManuListOne` since only HomeOne exists
-
-**B3. Header top bar missing Login/Register (CORRECT)**
-- Login/Register was correctly removed from Header.tsx per governance
-- No action needed
-
-### SECTION C: Hero and Banner
-**STATUS: PASS** — Banner renders correctly with Swiper slider, correct typography, CTA buttons, and video play icon. No font anomalies detected.
-
-### SECTION D: Quick Request Form — CSS Bug Found
-**Root cause identified**: The CSS in `style.css` (line 6888-6903) styles inputs with `input[type="text"]`, `input[type="date"]`, `input[type="email"]` but NOT `input[type="tel"]`. The Phone input in `QuickRequest.tsx` uses `type="tel"`, so it gets no border, no border-radius, no padding.
-
-- File: `src/apps/public/sections/home-one/QuickRequest.tsx` line 91
-- Fix: Change `type="tel"` to `type="text"` to match the CSS selectors. This is the template-correct approach (the original template uses `type="text"` for phone fields).
-
-### SECTION E: Section Order
-**STATUS: PASS** — Current order in `HomeOne.tsx` matches the template source exactly:
-```
-Header -> BannerOne -> SlidingTextOne -> ServiceOne -> AboutOne -> ListingOne ->
-QuickRequest -> WhychooseOne -> TestimonialOne -> VideoOne -> GalleryHomeOne ->
-BrandOne -> LetsTalk -> Footer -> StrickyHeader
-```
-Gallery is correctly positioned AFTER Video and BEFORE Brand. No reordering needed.
-
-### SECTION F: Gallery
-**STATUS: PASS** — Gallery renders as a Swiper carousel with 6 items, correct class names. Placeholder images (320x390) are expected since real images have not been provided yet.
-
-### SECTION G: Footer
-**STATUS: PASS** — Footer structure matches template with logo, Quick Links, Services, Contact Us columns, email input, and copyright bar.
-
-### SECTION H: File Integrity
-All required CSS files are present in `src/apps/public/assets/css/`:
-- style.css (22,883 lines, main stylesheet)
-- bootstrap.min.css
-- animate.min.css
-- custom-animate.css
-- flaticon.css
-- font-awesome-all.css
-- nice-select.css
-- images/ directory
-
-Google Fonts (Roboto, Inter Tight) loading successfully via style.css line 20.
+## Pre-Requisite
+Create Restore Point: `RP-CompanyDetails-Intake-20260224` (documented in Saya Project Docs/Restore Points/)
 
 ---
 
-## Execution Steps
+## Deliverable 1: `/Saya Project Docs/company-profile.md`
 
-### Step 1: Fix StrickyHeader (Cart removal + Nav list)
-**File: `src/apps/public/sections/common/StrickyHeader.tsx`**
-- Remove the `main-menu__cart-box` div (lines 44-49) containing the cart icon and "04" badge
-- Change line 38 to always pass `onePageManuListOne` (remove the conditional that uses `onePageManuListThree`)
+### Verified Company Identity
 
-### Step 2: Fix QuickRequest Phone Input
-**File: `src/apps/public/sections/home-one/QuickRequest.tsx`**
-- Change line 91 from `type="tel"` to `type="text"` so the CSS selector `.booking-one__input-box input[type="text"]` properly styles the phone input with border, border-radius, and padding
+| Field | Value | Source |
+|-------|-------|--------|
+| Legal Name | Saya N.V. | FB About |
+| Trading Name | Saya Car Center and Rental | User-provided context |
+| FB Category | Car dealership | FB About |
+| Address | Hofstraat #121, Paramaribo, Suriname | FB About (confirmed) |
+| Landline | 52 15 33 | User-provided |
+| Mobile | +597 740-3744 | FB About |
+| WhatsApp | +597 8651510 (wa.me/5978651510) | User-provided |
+| Email | sales@sayanv.com | User-confirmed |
+| Website (new) | sayanv.com | User-confirmed (project target) |
+| Website (legacy) | sayanv.sr | FB About (currently unreachable) |
+| Facebook | facebook.com/SayanvOfficial (21K followers) | FB About |
+| Instagram | @sayanv_official | FB About |
+| Hours | Mon-Fri 08:00-17:00, Sat 08:00-15:00, Sun Closed | User-provided (NEEDS CLIENT CONFIRMATION) |
 
-### Step 3: Verify Build and Visual Parity
-- Confirm build compiles (only pre-existing apexcharts type error)
-- Confirm no cart icon visible on public pages
-- Confirm Quick Request form fields all have consistent styling
-- Confirm font isolation maintained
+### Services (High Confidence)
+- Car Center (sales) -- inferred from FB "Car dealership" category
+- Car Rental -- inferred from project name "Saya Car Center and Rental"
+- Specific service details: NEEDS CLIENT INPUT
+
+### Verification Notes Section
+- Documents where each data point was sourced (FB vs Google vs user-provided)
+- Lists all conflicts found and how they were resolved
+- Flags items needing client confirmation
 
 ---
 
-## Technical Details
+## Deliverable 2: `/Saya Project Docs/content-seeding-plan.md`
 
-### Files Modified (Total: 2)
-1. `src/apps/public/sections/common/StrickyHeader.tsx` — Remove cart icon, fix nav list
-2. `src/apps/public/sections/home-one/QuickRequest.tsx` — Fix phone input type for CSS match
+### Seeding Blueprint (Mapped to Gorent HomeOne Sections)
 
-### Documentation Updates
-- `Phase-10-Frontend-Parity-Import-Plan.md` — Record final corrections
-- `Tasks.md` — Mark final parity corrections completed
+| Section | Content Source | Status |
+|---------|--------------|--------|
+| Header | Menu items for HomeOne only | Ready (static) |
+| Hero | Company tagline + CTA copy | NEEDS CLIENT INPUT (no tagline found publicly) |
+| Services Cards | Car Sales, Car Rental, + TBD | Partial (needs service descriptions) |
+| About Snippet | Company intro text | NEEDS CLIENT INPUT |
+| Quick Request Form | Labels only (no backend) | Ready (static) |
+| Testimonials | None found publicly | PLACEHOLDER (flagged) |
+| Contact Section | Verified contact block | Ready |
+| Footer | Contact + links + copyright | Ready |
 
-### Checklist Impact
-- B3: PASS (cart removed from StrickyHeader)
-- B5: PASS (no login/register on public — already removed)
-- D2: PASS (phone input border-radius matches demo after type fix)
-- E1-E7: PASS (section order confirmed correct)
-- F1: PASS (public auth links not present)
+### Seed Data Map (Static JSON Placeholders)
+
+Four JSON files to be created under `/src/apps/public/data/`:
+
+1. **company.json** -- Contact details, hours, social links (all verified data above)
+2. **services.json** -- Service cards with placeholder descriptions (flagged NEEDS CLIENT INPUT)
+3. **fleet_placeholders.json** -- Empty/placeholder vehicle entries (NEEDS CLIENT INPUT for real inventory)
+4. **testimonials_placeholders.json** -- Placeholder entries (NEEDS CLIENT INPUT, none found publicly)
+
+These JSON files will later map to Supabase tables but remain static for now.
+
+### "Client Input Required" List
+- Company tagline / slogan
+- Service descriptions (what exactly does Car Center offer? Maintenance? Parts?)
+- About Us paragraph
+- Vehicle inventory details
+- Customer testimonials
+- Business hours confirmation
+- Logo files (high-res)
+- Gallery images (real photos)
+- Team member info (if applicable)
+
+---
+
+## Deliverable 3: Housekeeping Updates
+
+- **architecture.md**: Add note: "No DB/Supabase work performed; content seeding is docs + static placeholders only."
+- **backend.md**: Add note: "Company details intake is documentation-only. No backend changes."
+- **Tasks.md**: Log this task completion
+
+---
+
+## Files Created/Modified (Total: 5)
+
+1. `Saya Project Docs/Restore Points/RP-CompanyDetails-Intake-20260224.md` -- NEW (restore point)
+2. `Saya Project Docs/company-profile.md` -- NEW (verified company details)
+3. `Saya Project Docs/content-seeding-plan.md` -- NEW (seeding blueprint + JSON plan)
+4. `Saya Project Docs/architecture.md` -- UPDATED (housekeeping note)
+5. `Saya Project Docs/backend.md` -- UPDATED (housekeeping note)
+
+No code files modified. No UI changes. No database work. No JSON files created yet (those are planned for a future task per the seeding plan).
+
+---
+
+## Governance Compliance
+- No UI/layout changes
+- No new frameworks
+- No Supabase/database work
+- Template parity untouched
+- Restore point created before any changes
+- All conflicts documented and resolved with user input
